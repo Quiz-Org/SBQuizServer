@@ -2,6 +2,10 @@ package com.example.sbquizserver;
 
 
 
+import com.example.sbquizserver.models.Answer;
+import com.example.sbquizserver.models.Question;
+import com.example.sbquizserver.repos.AnswerRepository;
+
 import java.util.List;
 
 public class QABundle {

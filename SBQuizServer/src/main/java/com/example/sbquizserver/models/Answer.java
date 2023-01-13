@@ -1,4 +1,4 @@
-package com.example.sbquizserver;
+package com.example.sbquizserver.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

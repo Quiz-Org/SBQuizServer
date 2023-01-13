@@ -1,4 +1,5 @@
-package com.example.sbquizserver;
+package com.example.sbquizserver.repos;
+import com.example.sbquizserver.models.Answer;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
