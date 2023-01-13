@@ -11,7 +11,11 @@ public class Answer {
     @Id
     private Integer _id;
     private Integer questionId;
-    private String Answer_text;
+    private String AnswerText;
     private boolean Correct;
 
+    public Integer get_id() {return _id;}
+    public Integer getQuestionId() {return questionId;}
+    public String getAnswerText() {return AnswerText;}
+    public boolean isCorrect() {return Correct;}
 }

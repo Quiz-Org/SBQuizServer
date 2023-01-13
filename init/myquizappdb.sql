@@ -29,16 +29,16 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `answer` (
   `_id` int(11) NOT NULL,
-  `Question_id` int(11) NOT NULL,
-  `Answer_text` text NOT NULL,
-  `Correct` tinyint(1) NOT NULL
+  `question_id` int(11) NOT NULL,
+  `answer_text` text NOT NULL,
+  `correct` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `answer`
 --
 
-INSERT INTO `answer` (`_id`, `Question_id`, `Answer_text`, `Correct`) VALUES
+INSERT INTO `answer` (`_id`, `question_id`, `answer_text`, `correct`) VALUES
 (0, 0, '1066', 1),
 (1, 0, '1939', 0),
 (2, 0, '45', 0),
@@ -76,15 +76,15 @@ INSERT INTO `answer` (`_id`, `Question_id`, `Answer_text`, `Correct`) VALUES
 
 CREATE TABLE `question` (
   `_id` int(11) NOT NULL,
-  `Quiz_id` int(11) NOT NULL,
-  `Question_text` text NOT NULL
+  `quiz_id` int(11) NOT NULL,
+  `question_text` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `question`
 --
 
-INSERT INTO `question` (`_id`, `Quiz_id`, `Question_text`) VALUES
+INSERT INTO `question` (`_id`, `quiz_id`, `question_text`) VALUES
 (0, 0, 'What year was The Battle of Hastings?'),
 (1, 0, 'How many different wives did Henry VIII have?'),
 (2, 1, 'What values can a bit hold?'),
@@ -101,16 +101,16 @@ INSERT INTO `question` (`_id`, `Quiz_id`, `Question_text`) VALUES
 
 CREATE TABLE `quiz` (
   `_id` int(11) NOT NULL,
-  `Name` text NOT NULL,
-  `Description` text NOT NULL,
-  `Num_Quests` int(11) NOT NULL
+  `name` text NOT NULL,
+  `description` text NOT NULL,
+  `num_quests` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `quiz`
 --
 
-INSERT INTO `quiz` (`_id`, `Name`, `Description`, `Num_Quests`) VALUES
+INSERT INTO `quiz` (`_id`, `name`, `description`, `num_quests`) VALUES
 (0, 'History', 'A short quiz on general history.', 2),
 (1, 'Bits and Bytes', 'A short quiz about basic data quantities', 5);
 
@@ -123,14 +123,14 @@ INSERT INTO `quiz` (`_id`, `Name`, `Description`, `Num_Quests`) VALUES
 --
 ALTER TABLE `answer`
   ADD PRIMARY KEY (`_id`),
-  ADD KEY `Question_id` (`Question_id`);
+  ADD KEY `questionId` (`question_id`);
 
 --
 -- Indexes for table `question`
 --
 ALTER TABLE `question`
   ADD PRIMARY KEY (`_id`),
-  ADD KEY `Quiz_id` (`Quiz_id`);
+  ADD KEY `quizId` (`quiz_id`);
 
 --
 -- Indexes for table `quiz`

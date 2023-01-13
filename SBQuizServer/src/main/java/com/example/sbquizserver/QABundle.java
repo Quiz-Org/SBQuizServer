@@ -1,18 +1,15 @@
 package com.example.sbquizserver;
 
 
-import org.aspectj.weaver.patterns.TypePatternQuestions;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 public class QABundle {
-    @Autowired
-    AnswerRepository answerRepository;
-    private Question question;
-    private List<Answer> answers;
 
-    public QABundle(Question question){
+    private final Question question;
+    private final List<Answer> answers;
+
+    public QABundle(Question question, AnswerRepository answerRepository){
 
         this.question = question;
 
@@ -20,5 +17,11 @@ public class QABundle {
 
     }
 
+    public Question getQuestion() {
+        return question;
+    }
 
+    public List<Answer> getAnswers() {
+        return answers;
+    }
 }

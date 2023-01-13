@@ -11,10 +11,11 @@ public class Question {
 @Id
     private Integer _id;
 
-    private Integer QuizId;
+    private Integer quizId;
 
-    private String Question_text;
+    private String questionText;
 
     public Integer get_id(){return this._id;}
-
+    public Integer getQuizId(){return this.quizId;}
+    public String getQuestionText() {return questionText;}
 }
