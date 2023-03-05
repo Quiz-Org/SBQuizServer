@@ -21,10 +21,12 @@ public class QABundle {
 
     }
 
+    @SuppressWarnings("unused")
     public Question getQuestion() {
         return question;
     }
 
+    @SuppressWarnings("unused")
     public List<Answer> getAnswers() {
         return answers;
     }
