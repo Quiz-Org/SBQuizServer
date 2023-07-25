@@ -27,6 +27,11 @@ SET time_zone = "+00:00";
 -- Table structure for table `answer`
 --
 
+CREATE DATABASE myquizappdb;
+
+
+USE myquizappdb;
+
 CREATE TABLE `answer` (
   `_id` int(11) NOT NULL,
   `question_id` int(11) NOT NULL,
