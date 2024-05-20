@@ -13,10 +13,6 @@ variable "vpc_cidr" {
   type        = string
 }
 
-output "vpc_id" {
-  value = "aws_vpc.TerraformTest.id"
-}
-
 variable "vpc_tags" {
   description = "Tags for VPC"
   type        = map(any)
