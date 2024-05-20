@@ -1,17 +1,16 @@
 variable "region" {
-  type = string
+  type    = string
   default = "eu-west-2"
 }
 
 variable "avail_zones" {
-  type = list(string)
-  default = ["eu-west-2a","eu-west-2b","eu-west-2c"]
+  type    = list(string)
+  default = ["eu-west-2a", "eu-west-2b", "eu-west-2c"]
 }
 
 variable "vpc_cidr" {
   description = "CIDR for VPC"
-  type = string
-  default = "10.0.0.0/16"
+  type        = string
 }
 
 output "vpc_id" {
@@ -20,9 +19,5 @@ output "vpc_id" {
 
 variable "vpc_tags" {
   description = "Tags for VPC"
-  type = map
-  default = {
-    Name: "TerraformTest"
-    Project: "Testing Terraform"
-  }
+  type        = map(any)
 }
