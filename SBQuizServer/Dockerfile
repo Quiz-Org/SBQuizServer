@@ -3,6 +3,7 @@ RUN addgroup -S demo && adduser -S demo -G demo
 VOLUME /tmp
 USER demo
 ARG EXTRACTED=/workspace/app/target/extracted
+EXPOSE 8080
 WORKDIR application
 COPY --from=build ${EXTRACTED}/dependencies/ ./
 COPY --from=build ${EXTRACTED}/spring-boot-loader/ ./
