@@ -1,9 +1,9 @@
 terraform {
   backend "s3" {
-    bucket         = "quiz-server-tf-backend"
+    bucket         = "quiz-server-tf"
     key            = "tf-infra/terraform.tfstate"
     region         = "eu-west-2"
-    dynamodb_table = "quiz-server-tf-backend"
+    dynamodb_table = "quiz-server-tf-table"
     encrypt        = true
   }
   required_providers {
@@ -14,12 +14,6 @@ terraform {
   }
 }
 
-module "ecrRepo" {
-  source        = "./modules/ecr"
-
-  ecr_repo_name = local.ecr_repo_name
-}
-
 module "ecsCluster" {
   source = "./modules/ecs"
 
@@ -27,7 +21,7 @@ module "ecsCluster" {
   availability_zones             = local.availability_zones
 
   quiz_task_family               = local.quiz_task_family
-  ecr_repo_url                   = module.ecrRepo.repository_url
+  ecr_repo_url                   = local.ecr_repo_name
 
   container_port                 = local.container_port
   ecs_task_execution_role_name   = local.ecs_task_execution_role_name

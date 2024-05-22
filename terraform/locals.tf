@@ -1,8 +1,8 @@
 locals {
-  bucket_name = "quiz-server-tf-backend"
-  table_name  = "quiz-server-tf-backend"
+  bucket_name = "quiz-server-tf"
+  table_name  = "quiz-server-tf-table"
 
-  ecr_repo_name = "quiz-ecr-repo"
+  ecr_repo_name = "248919602463.dkr.ecr.eu-west-2.amazonaws.com/quiz-ecr-repo"
 
   quiz_cluster_name            = "quiz-cluster"
   availability_zones           = ["eu-west-2a", "eu-west-2b", "eu-west-2c"]
