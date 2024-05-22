@@ -19,7 +19,7 @@ resource "aws_ecs_task_definition" "quiz_task" {
   [
         {
             "name": "db",
-            "image": "${var.ecr_repo_url}:quiz-db",
+            "image": "${var.ecr_repo_url}:db",
             "cpu": 0,
             "links": [],
             "portMappings": [{
@@ -191,26 +191,12 @@ resource "aws_ecs_task_definition" "quiz_task" {
   cpu                      = "256"
   execution_role_arn       = aws_iam_role.quiz_task_execution_role.arn
 }
-resource "aws_ecs_task_definition" "quiz_sb_server_task" {
-  family                   = "quiz-sb-server"
-  container_definitions    = <<DEFINITION
-  [
-
-    ]
-  DEFINITION
-  requires_compatibilities = ["FARGATE"]
-  network_mode             = "awsvpc"
-  memory                   = "512"
-  cpu                      = "256"
-  execution_role_arn       = aws_iam_role.quiz_task_execution_role.arn
-}
-
-resource "aws_cloudwatch_log_group" "yada" {
+resource "aws_cloudwatch_log_group" "log_group" {
   name = "quiz-logs"
 
   tags = {
     Environment = "production"
-    Application = "serviceA"
+    Application = "quiz"
   }
 }
 
@@ -266,62 +252,28 @@ resource "aws_lb_listener" "listener" {
     target_group_arn = aws_lb_target_group.target_group.arn
   }
 }
-resource "aws_ecs_service" "quiz_db_service" {
+resource "aws_ecs_service" "quiz_service" {
   name            = var.quiz_db_service_name
   cluster         = aws_ecs_cluster.quiz_cluster.id
-  task_definition = aws_ecs_task_definition.quiz_db_task.arn
+  task_definition = aws_ecs_task_definition.quiz_task.arn
   launch_type     = "FARGATE"
   desired_count   = 1
+
+  force_new_deployment = true
+
+  triggers = {
+    redeployment = plantimestamp()
+  }
 
   network_configuration {
     subnets          = ["${aws_default_subnet.default_subnet_a.id}", "${aws_default_subnet.default_subnet_b.id}", "${aws_default_subnet.default_subnet_c.id}"]
     assign_public_ip = true
     security_groups  = ["${aws_security_group.service_security_group.id}"]
   }
-
-  service_connect_configuration {
-    enabled   = true
-    namespace = aws_service_discovery_http_namespace.service_discovery.arn
-    service {
-      discovery_name = "db"
-      port_name      = "dbPort"
-      client_alias {
-        dns_name = "db"
-        port     = 3306
-      }
-    }
-  }
-}
-resource "aws_ecs_service" "quiz_sb_server_service" {
-  name            = var.quiz_sb_server_service_name
-  cluster         = aws_ecs_cluster.quiz_cluster.id
-  task_definition = aws_ecs_task_definition.quiz_sb_server_task.arn
-  launch_type     = "FARGATE"
-  desired_count   = 1
-
   load_balancer {
     target_group_arn = aws_lb_target_group.target_group.arn
     container_name   = "sb-server"
     container_port   = var.container_port
-  }
-
-  network_configuration {
-    subnets          = ["${aws_default_subnet.default_subnet_a.id}", "${aws_default_subnet.default_subnet_b.id}", "${aws_default_subnet.default_subnet_c.id}"]
-    assign_public_ip = true
-    security_groups  = ["${aws_security_group.service_security_group.id}"]
-  }
-
-  service_connect_configuration {
-    enabled   = true
-    namespace = aws_service_discovery_http_namespace.service_discovery.arn
-    service {
-      discovery_name = "sb-server"
-      port_name      = "sb-port"
-      client_alias {
-        dns_name = "sb-server"
-        port     = 8080
-      }
-    }
   }
 }
 
@@ -340,7 +292,4 @@ resource "aws_security_group" "service_security_group" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-resource "aws_service_discovery_http_namespace" "service_discovery" {
-  name        = "development"
-  description = "example"
-}
+
