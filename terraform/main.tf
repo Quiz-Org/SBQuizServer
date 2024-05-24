@@ -17,17 +17,17 @@ terraform {
 module "ecsCluster" {
   source = "./modules/ecs"
 
-  quiz_cluster_name              = local.quiz_cluster_name
-  availability_zones             = local.availability_zones
+  quiz_cluster_name  = local.quiz_cluster_name
+  availability_zones = local.availability_zones
 
-  quiz_task_family               = local.quiz_task_family
-  ecr_repo_url                   = local.ecr_repo_name
+  quiz_task_family = local.quiz_task_family
+  ecr_repo_url     = local.ecr_repo_name
 
-  container_port                 = local.container_port
-  ecs_task_execution_role_name   = local.ecs_task_execution_role_name
+  container_port               = local.container_port
+  ecs_task_execution_role_name = local.ecs_task_execution_role_name
 
-  quiz_db_task_name              = local.quiz_db_task_name
-  quiz_sb_server_task_name       = local.quiz_sb_server_task_name
+  quiz_db_task_name        = local.quiz_db_task_name
+  quiz_sb_server_task_name = local.quiz_sb_server_task_name
 
   application_load_balancer_name = local.application_load_balancer_name
   target_group_name              = local.target_group_name

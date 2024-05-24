@@ -1,6 +1,55 @@
-resource "aws_default_vpc" "vpc" {
-  enable_dns_support   = true
+resource "aws_vpc" "quiz_vpc" {
+  cidr_block           = "10.0.0.0/16"
   enable_dns_hostnames = true
+  enable_dns_support   = true
+}
+
+resource "aws_subnet" "subnet_a" {
+  vpc_id = aws_vpc.quiz_vpc.id
+  availability_zone = var.availability_zones[0]
+  cidr_block = cidrsubnet(aws_vpc.quiz_vpc.cidr_block, 8, 0)
+}
+
+resource "aws_subnet" "subnet_b" {
+  vpc_id = aws_vpc.quiz_vpc.id
+  availability_zone = var.availability_zones[1]
+  cidr_block = cidrsubnet(aws_vpc.quiz_vpc.cidr_block, 8, 1)
+}
+
+resource "aws_subnet" "subnet_c" {
+  vpc_id = aws_vpc.quiz_vpc.id
+  availability_zone = var.availability_zones[2]
+  map_public_ip_on_launch = true
+  cidr_block = cidrsubnet(aws_vpc.quiz_vpc.cidr_block, 8, 3)
+}
+
+resource "aws_nat_gateway" "subnet_c_nat" {
+  subnet_id = aws_subnet.subnet_c.id
+  allocation_id = aws_eip.eip.id
+}
+
+resource "aws_route_table" "rt" {
+  vpc_id = aws_vpc.quiz_vpc.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.quiz_gateway.id
+  }
+  tags = {
+    Name = "Public Subnet Route Table"
+  }
+}
+
+resource "aws_eip" "eip" {
+  vpc = true
+}
+
+resource "aws_internet_gateway" "quiz_gateway" {
+  vpc_id = aws_vpc.quiz_vpc.id
+}
+
+resource "aws_route_table_association" "rt_associate_public" {
+  subnet_id = aws_subnet.subnet_c.id
+  route_table_id = aws_route_table.rt.id
 }
 
 resource "aws_default_subnet" "default_subnet_a" {
@@ -15,297 +64,13 @@ resource "aws_default_subnet" "default_subnet_c" {
   availability_zone = var.availability_zones[2]
 }
 
-resource "aws_service_discovery_private_dns_namespace" "quiz_private_namespace" {
-  name        = "quiz.server.local"
-  description = "Namespace for quiz services"
-  vpc         = aws_default_vpc.vpc.id
-}
-/*
-resource "aws_service_discovery_service" "quiz_db_sd_record" {
-  name = "db"
-
-  dns_config {
-    namespace_id = aws_service_discovery_private_dns_namespace.quiz_namespace.id
-
-    dns_records {
-      ttl  = 10
-      type = "A"
-    }
-
-    routing_policy = "MULTIVALUE"
-  }
-
-  health_check_custom_config {
-    failure_threshold = 1
-  }
-}
-
-resource "aws_service_discovery_service" "quiz_sb_server_sd_record" {
-  name = "sb-server"
-
-  dns_config {
-    namespace_id = aws_service_discovery_private_dns_namespace.quiz_namespace.id
-
-    dns_records {
-      ttl  = 10
-      type = "A"
-    }
-
-    routing_policy = "MULTIVALUE"
-  }
-
-  health_check_custom_config {
-    failure_threshold = 1
-  }
-}
-
-resource "aws_ecs_cluster" "quiz_cluster" {
-  name = var.quiz_cluster_name
-
-  setting {
-    name  = "containerInsights"
-    value = "disabled"
-  }
-}
-
-resource "aws_ecs_task_definition" "quiz_db_task" {
-  family                   = "quiz-db"
-  container_definitions    = <<DEFINITION
-[
-        {
-            "name": "db",
-            "image": "${var.ecr_repo_url}:db",
-            "cpu": 0,
-            "links": [],
-            "portMappings": [{
-              "name": "dbport",
-              "containerPort": 3306,
-              "hostPort": 3306,
-              "protocol": "tcp"
-            }],
-            "essential": true,
-            "entryPoint": [],
-            "command": [],
-            "environment": [],
-            "environmentFiles": [],
-            "mountPoints": [],
-            "volumesFrom": [],
-            "linuxParameters": {
-                "devices": [],
-                "tmpfs": []
-            },
-            "secrets": [],
-            "dependsOn": [
-                {
-                    "containerName": "Db_ResolvConf_InitContainer",
-                    "condition": "SUCCESS"
-                }
-            ],
-            "dnsServers": [],
-            "dnsSearchDomains": [],
-            "extraHosts": [],
-            "dockerSecurityOptions": [],
-            "dockerLabels": {},
-            "ulimits": [],
-            "logConfiguration": {
-                "logDriver": "awslogs",
-                "options": {
-                    "awslogs-group": "quiz-db-logs",
-                    "awslogs-region": "eu-west-2",
-                    "awslogs-stream-prefix": "dbquiz"
-                },
-                "secretOptions": []
-            },
-            "systemControls": [],
-            "credentialSpecs": []
-        },
-        {
-            "name": "Db_ResolvConf_InitContainer",
-            "image": "docker/ecs-searchdomain-sidecar:1.0",
-            "cpu": 0,
-            "links": [],
-            "portMappings": [],
-            "essential": false,
-            "entryPoint": [],
-            "command": [
-                "eu-west-2.compute.internal",
-                "sbquizserver.local"
-            ],
-            "environment": [],
-            "environmentFiles": [],
-            "mountPoints": [],
-            "volumesFrom": [],
-            "secrets": [],
-            "dnsServers": [],
-            "dnsSearchDomains": [],
-            "extraHosts": [],
-            "dockerSecurityOptions": [],
-            "dockerLabels": {},
-            "ulimits": [],
-            "logConfiguration": {
-                "logDriver": "awslogs",
-                "options": {
-                    "awslogs-group": "quiz-db-logs",
-                    "awslogs-region": "eu-west-2",
-                    "awslogs-stream-prefix": "dbquizinit"
-                },
-                "secretOptions": []
-            },
-            "systemControls": [],
-            "credentialSpecs": []
-        }
-    ]
-  DEFINITION
-  requires_compatibilities = ["FARGATE"]
-  network_mode             = "awsvpc"
-  memory                   = "512"
-  cpu                      = "256"
-  execution_role_arn       = aws_iam_role.quiz_task_execution_role.arn
-}
-
-resource "aws_ecs_task_definition" "quiz_sb_server_task" {
-  family                   = "quiz-sb-server"
-  container_definitions    = <<DEFINITION
-  [
-
-        {
-            "name": "sb-server",
-            "image": "fegrus/quiz-sb-server:latest",
-            "cpu": 0,
-            "links": [],
-            "portMappings": [
-                {
-                    "name": "sb-port",
-                    "containerPort": 8080,
-                    "hostPort": 8080,
-                    "protocol": "tcp"
-                }
-            ],
-            "essential": true,
-            "entryPoint": [],
-            "command": [],
-            "environment": [],
-            "environmentFiles": [],
-            "mountPoints": [],
-            "volumesFrom": [],
-            "linuxParameters": {
-                "devices": [],
-                "tmpfs": []
-            },
-            "secrets": [],
-            "dependsOn": [
-                {
-                    "containerName": "Sbserver_ResolvConf_InitContainer",
-                    "condition": "SUCCESS"
-                }
-            ],
-            "dnsServers": [],
-            "dnsSearchDomains": [],
-            "extraHosts": [],
-            "dockerSecurityOptions": [],
-            "dockerLabels": {},
-            "ulimits": [],
-            "logConfiguration": {
-                "logDriver": "awslogs",
-                "options": {
-                    "awslogs-group": "quiz-sb-server-logs",
-                    "awslogs-region": "eu-west-2",
-                    "awslogs-stream-prefix": "sbquizserver"
-                },
-                "secretOptions": []
-            },
-            "systemControls": [],
-            "credentialSpecs": []
-        },
-        {
-            "name": "Sbserver_ResolvConf_InitContainer",
-            "image": "docker/ecs-searchdomain-sidecar:1.0",
-            "cpu": 0,
-            "links": [],
-            "portMappings": [],
-            "essential": false,
-            "entryPoint": [],
-            "command": [
-                "eu-west-2.compute.internal",
-                "sbquizserver.local"
-            ],
-            "environment": [],
-            "environmentFiles": [],
-            "mountPoints": [],
-            "volumesFrom": [],
-            "secrets": [],
-            "dnsServers": [],
-            "dnsSearchDomains": [],
-            "extraHosts": [],
-            "dockerSecurityOptions": [],
-            "dockerLabels": {},
-            "ulimits": [],
-            "logConfiguration": {
-                "logDriver": "awslogs",
-                "options": {
-                    "awslogs-group": "quiz-sb-server-logs",
-                    "awslogs-region": "eu-west-2",
-                    "awslogs-stream-prefix": "sbquizserver-init"
-                },
-                "secretOptions": []
-            },
-            "systemControls": [],
-            "credentialSpecs": []
-        }
-    ]
-  DEFINITION
-  requires_compatibilities = ["FARGATE"]
-  network_mode             = "awsvpc"
-  memory                   = "512"
-  cpu                      = "256"
-  execution_role_arn       = aws_iam_role.quiz_task_execution_role.arn
-}
-resource "aws_cloudwatch_log_group" "log_db_group" {
-  name = "quiz-db-logs"
-
-  tags = {
-    Environment = "production"
-    Application = "quiz"
-  }
-}
-resource "aws_cloudwatch_log_group" "log_sb_server_group" {
-  name = "quiz-sb-server-logs"
-
-  tags = {
-    Environment = "production"
-    Application = "quiz"
-  }
-}
-resource "aws_iam_role" "quiz_task_execution_role" {
-  name               = var.ecs_task_execution_role_name
-  assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
-}
-
-resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
-  role       = aws_iam_role.quiz_task_execution_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
-}
-
-resource "aws_lb_target_group" "target_group" {
-  name        = var.target_group_name
-  port        = var.container_port
-  protocol    = "HTTP"
-  target_type = "ip"
-  vpc_id      = aws_default_vpc.vpc.id
-}
-
-resource "aws_alb" "application_load_balancer" {
-  name               = var.application_load_balancer_name
-  load_balancer_type = "application"
-  subnets = [
-    "${aws_default_subnet.default_subnet_a.id}",
-    "${aws_default_subnet.default_subnet_b.id}",
-    "${aws_default_subnet.default_subnet_c.id}"
-  ]
-  security_groups = ["${aws_security_group.load_balancer_security_group.id}"]
+resource "aws_service_discovery_private_dns_namespace" "quiz_namespace" {
+  name = "quiz.local"
+  vpc  = aws_vpc.quiz_vpc.id
 }
 
 resource "aws_security_group" "load_balancer_security_group" {
+  vpc_id = aws_vpc.quiz_vpc.id
   ingress {
     from_port   = 8080
     to_port     = 8080
@@ -321,17 +86,8 @@ resource "aws_security_group" "load_balancer_security_group" {
   }
 }
 
-resource "aws_lb_listener" "listener" {
-  load_balancer_arn = aws_alb.application_load_balancer.arn
-  port              = "8080"
-  protocol          = "HTTP"
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.target_group.arn
-  }
-}
-
 resource "aws_security_group" "service_security_group" {
+  vpc_id = aws_vpc.quiz_vpc.id
   ingress {
     from_port       = 0
     to_port         = 0
@@ -347,66 +103,260 @@ resource "aws_security_group" "service_security_group" {
   }
 }
 
-resource "aws_ecs_service" "quiz_sb_server_service" {
+resource "aws_lb" "quiz_load_balancer" {
+  name = "quiz-load-balancer"
+  enable_cross_zone_load_balancing = true
+  load_balancer_type = "application"
+  security_groups = [aws_security_group.load_balancer_security_group.id]
+  subnets = [
+    "${aws_subnet.subnet_a.id}",
+    "${aws_subnet.subnet_b.id}",
+    "${aws_subnet.subnet_c.id}"
+  ]
+}
 
-  name            = var.quiz_sb_server_service_name
-  cluster         = aws_ecs_cluster.quiz_cluster.id
-  task_definition = aws_ecs_task_definition.quiz_sb_server_task.arn
-  launch_type     = "FARGATE"
-  desired_count   = 1
-
-  propagate_tags      = "SERVICE"
-  scheduling_strategy = "REPLICA"
-
-  force_new_deployment = true
-  triggers = {
-    redeployment = plantimestamp()
+resource "aws_lb_listener" "sb_server_listener" {
+  load_balancer_arn = aws_lb.quiz_load_balancer.arn
+  default_action {
+    type = "forward"
+    target_group_arn = aws_lb_target_group.sb_server_target_group.arn
   }
+  port = 8080
+  protocol = "HTTP"
+}
 
-  network_configuration {
-    subnets          = ["${aws_default_subnet.default_subnet_a.id}", "${aws_default_subnet.default_subnet_b.id}", "${aws_default_subnet.default_subnet_c.id}"]
-    assign_public_ip = true
-    security_groups  = ["${aws_security_group.service_security_group.id}"]
-  }
+resource "aws_lb_target_group" "sb_server_target_group" {
+  name = "sb-server-tg"
+  target_type = "ip"
+  port = 8080
+  protocol = "HTTP"
+  vpc_id = aws_vpc.quiz_vpc.id
+}
 
-  load_balancer {
-    target_group_arn = aws_lb_target_group.target_group.arn
-    container_name   = "sb-server"
-    container_port   = var.container_port
-  }
+resource "aws_cloudwatch_log_group" "quiz_log_group" {
+  name = "quiz-log-group"
+}
 
-  service_registries {
-    container_port = "0"
-    port           = "0"
-    registry_arn   = aws_route53_record.tfer--Z0073158MH8B1HP1BV9A_sb-002D-server-002E-sbquizserver-002E-local-002E-_A_2fec373d9d034a70b5a20f6896180167.id
+resource "aws_ecs_cluster" "quiz-cluster" {
+  name = "quiz-cluster"
+  tags = {
+    "key" : "Project",
+    "value" : "quiz-server"
   }
 }
 
-resource "aws_ecs_service" "quiz_db_service" {
-
-  name            = var.quiz_db_service_name
-  cluster         = aws_ecs_cluster.quiz_cluster.id
-  task_definition = aws_ecs_task_definition.quiz_db_task.arn
-  launch_type     = "FARGATE"
-  desired_count   = 1
-
-  propagate_tags      = "SERVICE"
-  scheduling_strategy = "REPLICA"
-
-  service_registries {
-    container_port = "0"
-    port           = "0"
-    registry_arn   = aws_route53_record.tfer--Z0073158MH8B1HP1BV9A_db-002E-sbquizserver-002E-local-002E-_A_151ff0421bbf47b7bcc149aaacb53a0d.id
-  }
-
-  force_new_deployment = true
-  triggers = {
-    redeployment = plantimestamp()
-  }
-
+resource "aws_ecs_service" "db_service" {
+  name                               = "db-service"
+  cluster                            = aws_ecs_cluster.quiz-cluster.arn
+  task_definition = aws_ecs_task_definition.db_task_definition.arn
+  deployment_maximum_percent         = 200
+  deployment_minimum_healthy_percent = 100
+  desired_count = 1
+  launch_type = "FARGATE"
+  deployment_controller { type = "ECS" }
   network_configuration {
-    subnets          = ["${aws_default_subnet.default_subnet_a.id}", "${aws_default_subnet.default_subnet_b.id}", "${aws_default_subnet.default_subnet_c.id}"]
-    assign_public_ip = true
-    security_groups  = ["${aws_security_group.service_security_group.id}"]
+    security_groups = ["${aws_security_group.service_security_group.id}"]
+    subnets = [
+      "${aws_subnet.subnet_a.id}",
+      "${aws_subnet.subnet_b.id}",
+      "${aws_subnet.subnet_c.id}"
+    ]
   }
+  propagate_tags = "SERVICE"
+  scheduling_strategy = "REPLICA"
+  service_registries {
+    registry_arn = aws_service_discovery_service.db_service_discovery_entry.arn
+  }
+}
+
+resource "aws_service_discovery_service" "db_service_discovery_entry" {
+  name = "db"
+  description = "db service discovery entry"
+  dns_config {
+    namespace_id = aws_service_discovery_private_dns_namespace.quiz_namespace.id
+    routing_policy = "MULTIVALUE"
+    dns_records {
+      ttl  = 60
+      type = "A"
+    }
+  }
+  health_check_custom_config {failure_threshold = 1}
+  namespace_id = aws_service_discovery_private_dns_namespace.quiz_namespace.id
+}
+
+resource "aws_ecs_task_definition" "db_task_definition" {
+  family                = "db-task-task-definition"
+  cpu = "256"
+  memory = "512"
+  task_role_arn = aws_iam_role.db_task_role.arn
+  execution_role_arn = aws_iam_role.db_task_role.arn
+  network_mode = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
+  container_definitions = <<TASK_DEFINITION
+[
+    {
+      "Name": "Db_ResolvConf_InitContainer",
+      "Image": "docker/ecs-searchdomain-sidecar:1.0",
+      "command": [
+                "eu-west-2.compute.internal",
+                "quiz.local"
+      ],
+      "essential": false,
+      "logConfiguration":
+      {
+        "logDriver": "awslogs",
+        "options":
+        {
+          "awslogs-group": "quiz-log-group",
+          "awslogs-region": "eu-west-2",
+          "awslogs-stream-prefix": "db-init"
+        },
+        "secretOptions": []
+      }
+    },
+    {
+      "Name": "db",
+      "DependsOn": [
+        {
+          "Condition": "SUCCESS",
+          "ContainerName": "Db_ResolvConf_InitContainer"
+        }
+      ],
+      "Essential": true,
+      "Image": "docker.io/fegrus/quiz-db:latest@sha256:677f25fe96216d99c9aec331fab5780ae49c03b0726cdb2cb6596a8b86bc022e",
+      "LinuxParameters": {},
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "quiz-log-group",
+          "awslogs-region": "eu-west-2",
+          "awslogs-stream-prefix": "db"
+        },
+        "secretOptions": []
+      }
+    }
+  ]
+  TASK_DEFINITION
+}
+
+resource "aws_iam_role" "db_task_role" {
+  assume_role_policy = data.aws_iam_policy_document.task_execution_role.json
+  managed_policy_arns = [
+    "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy",
+    "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+  ]
+}
+
+resource "aws_ecs_service" "sb_server_service" {
+  name = "sb-server-service"
+  task_definition = aws_ecs_task_definition.sb_server_task_definition.arn
+  depends_on = [aws_ecs_service.db_service,aws_lb_listener.sb_server_listener]
+  cluster = aws_ecs_cluster.quiz-cluster.arn
+  deployment_maximum_percent         = 200
+  deployment_minimum_healthy_percent = 100
+  deployment_controller { type = "ECS" }
+  network_configuration {
+    security_groups = ["${aws_security_group.service_security_group.id}"]
+    subnets = [
+      "${aws_subnet.subnet_a.id}",
+      "${aws_subnet.subnet_b.id}",
+      "${aws_subnet.subnet_c.id}"
+    ]
+  }
+  platform_version = "1.4.0"
+  propagate_tags = "SERVICE"
+  scheduling_strategy = "REPLICA"
+  desired_count = 1
+  launch_type = "FARGATE"
+  load_balancer {
+    container_name = "sb-server"
+    container_port = 8080
+    target_group_arn = aws_lb_target_group.sb_server_target_group.arn
+  }
+  service_registries {
+    registry_arn = aws_service_discovery_service.db_service_discovery_entry.arn
+  }
+}
+
+resource "aws_service_discovery_service" "sb_server_service_discovery_entry" {
+  name = "sb-server"
+  description = "sb-server service discovery entry"
+  dns_config {
+    namespace_id = aws_service_discovery_private_dns_namespace.quiz_namespace.id
+    routing_policy = "MULTIVALUE"
+    dns_records {
+      ttl  = 60
+      type = "A"
+    }
+  }
+  health_check_custom_config {failure_threshold = 1}
+  namespace_id = aws_service_discovery_private_dns_namespace.quiz_namespace.id
+}
+
+resource "aws_ecs_task_definition" "sb_server_task_definition" {
+  family                = "sb-server-task-definition"
+  cpu = "256"
+  memory = "512"
+  task_role_arn = aws_iam_role.sb_server_task_role.arn
+  execution_role_arn = aws_iam_role.sb_server_task_role.arn
+  network_mode = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
+  container_definitions = <<TASK_DEFINITION
+[
+    {
+      "Command": [
+        "eu-west-2.compute.internal",
+        "sbquizserver.local"
+      ],
+      "Image": "docker/ecs-searchdomain-sidecar:1.0",
+      "Essential": false,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "quiz-log-group",
+          "awslogs-region": "eu-west-2",
+          "awslogs-stream-prefix": "sb-server-init"
+        },
+        "secretOptions": []
+      },
+      "Name": "Sbserver_ResolvConf_InitContainer"
+    },
+    {
+      "DependsOn": [
+        {
+          "Condition": "SUCCESS",
+          "ContainerName": "Sbserver_ResolvConf_InitContainer"
+        }
+      ],
+      "Essential": true,
+      "Image": "fegrus/quiz-sb-server:latest",
+      "LinuxParameters": {},
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "quiz-log-group",
+          "awslogs-region": "eu-west-2",
+          "awslogs-stream-prefix": "sb-server"
+        },
+        "secretOptions": []
+      },
+      "Name": "sb-server",
+      "PortMappings": [
+        {
+          "ContainerPort": 8080,
+          "HostPort": 8080,
+          "Protocol": "tcp"
+        }
+      ]
+    }
+  ]
+  TASK_DEFINITION
+}
+
+resource "aws_iam_role" "sb_server_task_role" {
+  assume_role_policy = data.aws_iam_policy_document.task_execution_role.json
+  managed_policy_arns = [
+    "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy",
+    "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+  ]
 }
