@@ -20,12 +20,31 @@ resource "aws_service_discovery_private_dns_namespace" "quiz_private_namespace" 
   description = "Namespace for quiz services"
   vpc         = aws_default_vpc.vpc.id
 }
-
-resource "aws_service_discovery_service" "quiz_namespace" {
-  name = "quiz_namespace"
+/*
+resource "aws_service_discovery_service" "quiz_db_sd_record" {
+  name = "db"
 
   dns_config {
-    namespace_id = aws_service_discovery_private_dns_namespace.quiz_private_namespace.id
+    namespace_id = aws_service_discovery_private_dns_namespace.quiz_namespace.id
+
+    dns_records {
+      ttl  = 10
+      type = "A"
+    }
+
+    routing_policy = "MULTIVALUE"
+  }
+
+  health_check_custom_config {
+    failure_threshold = 1
+  }
+}
+
+resource "aws_service_discovery_service" "quiz_sb_server_sd_record" {
+  name = "sb-server"
+
+  dns_config {
+    namespace_id = aws_service_discovery_private_dns_namespace.quiz_namespace.id
 
     dns_records {
       ttl  = 10
@@ -42,6 +61,11 @@ resource "aws_service_discovery_service" "quiz_namespace" {
 
 resource "aws_ecs_cluster" "quiz_cluster" {
   name = var.quiz_cluster_name
+
+  setting {
+    name  = "containerInsights"
+    value = "disabled"
+  }
 }
 
 resource "aws_ecs_task_definition" "quiz_db_task" {
@@ -146,7 +170,7 @@ resource "aws_ecs_task_definition" "quiz_sb_server_task" {
 
         {
             "name": "sb-server",
-            "image": "${var.ecr_repo_url}:quiz-sb-server",
+            "image": "fegrus/quiz-sb-server:latest",
             "cpu": 0,
             "links": [],
             "portMappings": [
@@ -331,7 +355,7 @@ resource "aws_ecs_service" "quiz_sb_server_service" {
   launch_type     = "FARGATE"
   desired_count   = 1
 
-  propagate_tags = "SERVICE"
+  propagate_tags      = "SERVICE"
   scheduling_strategy = "REPLICA"
 
   force_new_deployment = true
@@ -352,8 +376,9 @@ resource "aws_ecs_service" "quiz_sb_server_service" {
   }
 
   service_registries {
-    registry_arn = aws_service_discovery_service.quiz_namespace.arn
-    container_name = "sb-server"
+    container_port = "0"
+    port           = "0"
+    registry_arn   = aws_route53_record.tfer--Z0073158MH8B1HP1BV9A_sb-002D-server-002E-sbquizserver-002E-local-002E-_A_2fec373d9d034a70b5a20f6896180167.id
   }
 }
 
@@ -365,12 +390,13 @@ resource "aws_ecs_service" "quiz_db_service" {
   launch_type     = "FARGATE"
   desired_count   = 1
 
-  propagate_tags = "SERVICE"
+  propagate_tags      = "SERVICE"
   scheduling_strategy = "REPLICA"
 
   service_registries {
-    registry_arn = aws_service_discovery_service.quiz_namespace.arn
-    container_name = "db"
+    container_port = "0"
+    port           = "0"
+    registry_arn   = aws_route53_record.tfer--Z0073158MH8B1HP1BV9A_db-002E-sbquizserver-002E-local-002E-_A_151ff0421bbf47b7bcc149aaacb53a0d.id
   }
 
   force_new_deployment = true
