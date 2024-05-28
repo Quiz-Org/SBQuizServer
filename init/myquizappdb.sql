@@ -35,9 +35,14 @@ SET time_zone = "+00:00";
 -- Indexes for table `quiz`
 --
 
+CREATE DATABASE myquizappdb;
+
 USE myquizappdb;
 
---
+CREATE USER 'MYSQL_USER'@'%' IDENTIFIED BY 'MYSQL_PASSWORD';
+GRANT SELECT ON myquizappdb.* TO 'MYSQL_USER'@'%';
+
+    --
 -- Table structure for table `quiz`
 --
 

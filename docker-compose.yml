@@ -3,19 +3,24 @@ version: '3.8'
 services:
   db:
       container_name: db
-      image: mysql
-      ports:
-        - "3306:3306"
-      #restart: always
-      environment:
-        MYSQL_ROOT_PASSWORD: MYSQL_ROOT_PASSWORD
-        MYSQL_DATABASE: myQuizAppDB
-        MYSQL_USER: MYSQL_USER
-        MYSQL_PASSWORD: MYSQL_PASSWORD
-      volumes:
-        - ./mysql:/var/lib/mysql
-        - ./init:/docker-entrypoint-initdb.d
+      image: fegrus/quiz-db
+      build: init/
+      #volumes:
+      #  - ./mysql:/var/lib/mysql
+  sb-server:
+    container_name: sb-server
+    build: SBQuizServer/
+    image: fegrus/quiz-sb-server
+    depends_on:
+      - db
+    restart: on-failure
+    ports:
+      - "8080:8080"
+
 
 volumes:
   mysql:
+networks:
+  mynetwork:
+    driver: bridge
 
