@@ -50,7 +50,7 @@ module "ecs_service" {
       environment = [
         {
           name  = "DB_URL",
-          value = "http://quiz-db.default.quiz-server.local:${local.db_port}"
+          value = "quiz-db.default.quiz-server.local:${local.db_port}"
         }
       ]
 

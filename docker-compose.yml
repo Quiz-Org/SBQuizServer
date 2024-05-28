@@ -9,7 +9,7 @@ services:
       #  - ./mysql:/var/lib/mysql
   sb-server:
     container_name: sb-server
-    build: SBQuizServer/
+    #build: SBQuizServer/
     image: fegrus/quiz-sb-server
     depends_on:
       - db
