@@ -194,36 +194,11 @@ resource "aws_ecs_task_definition" "db_task_definition" {
   requires_compatibilities = ["FARGATE"]
   container_definitions = <<TASK_DEFINITION
 [
-    {
-      "Name": "Db_ResolvConf_InitContainer",
-      "Image": "docker/ecs-searchdomain-sidecar:1.0",
-      "command": [
-                "eu-west-2.compute.internal",
-                "quiz.local"
-      ],
-      "essential": false,
-      "logConfiguration":
-      {
-        "logDriver": "awslogs",
-        "options":
-        {
-          "awslogs-group": "quiz-log-group",
-          "awslogs-region": "eu-west-2",
-          "awslogs-stream-prefix": "db-init"
-        },
-        "secretOptions": []
-      }
-    },
+
     {
       "Name": "db",
-      "DependsOn": [
-        {
-          "Condition": "SUCCESS",
-          "ContainerName": "Db_ResolvConf_InitContainer"
-        }
-      ],
       "Essential": true,
-      "Image": "docker.io/fegrus/quiz-db:latest@sha256:677f25fe96216d99c9aec331fab5780ae49c03b0726cdb2cb6596a8b86bc022e",
+      "Image": "248919602463.dkr.ecr.eu-west-2.amazonaws.com/db:latest",
       "LinuxParameters": {},
       "logConfiguration": {
         "logDriver": "awslogs",
@@ -303,33 +278,10 @@ resource "aws_ecs_task_definition" "sb_server_task_definition" {
   requires_compatibilities = ["FARGATE"]
   container_definitions = <<TASK_DEFINITION
 [
+
     {
-      "Command": [
-        "eu-west-2.compute.internal",
-        "sbquizserver.local"
-      ],
-      "Image": "docker/ecs-searchdomain-sidecar:1.0",
-      "Essential": false,
-      "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-          "awslogs-group": "quiz-log-group",
-          "awslogs-region": "eu-west-2",
-          "awslogs-stream-prefix": "sb-server-init"
-        },
-        "secretOptions": []
-      },
-      "Name": "Sbserver_ResolvConf_InitContainer"
-    },
-    {
-      "DependsOn": [
-        {
-          "Condition": "SUCCESS",
-          "ContainerName": "Sbserver_ResolvConf_InitContainer"
-        }
-      ],
       "Essential": true,
-      "Image": "fegrus/quiz-sb-server:latest",
+      "Image": "248919602463.dkr.ecr.eu-west-2.amazonaws.com/sb-sever:latest",
       "LinuxParameters": {},
       "logConfiguration": {
         "logDriver": "awslogs",
