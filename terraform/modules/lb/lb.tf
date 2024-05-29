@@ -24,7 +24,8 @@ module "alb" {
       cidr_ipv4   = "0.0.0.0/0"
     }
   }
-  security_group_egress_rules = { for subnet in data.aws_subnet.private_cidr :
+  security_group_egress_rules = {
+    for subnet in data.aws_subnet.private_cidr :
     (subnet.availability_zone) => {
       ip_protocol = "-1"
       cidr_ipv4   = subnet.cidr_block
@@ -67,9 +68,19 @@ module "alb" {
     }
   }
 
+  route53_records = {
+    A = {
+      name    = var.cluster_name
+      type    = "A"
+      zone_id = data.aws_route53_zone.route_53_zone.id
+    }
+  }
   tags = var.tags
 }
 
+data "aws_route53_zone" "route_53_zone"{
+  name = "myquizapp.co.uk"
+}
 
 data "aws_vpc" "vpc" {
   depends_on = [var.vpc_id]
