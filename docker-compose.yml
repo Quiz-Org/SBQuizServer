@@ -4,6 +4,7 @@ services:
   db:
       container_name: db
       image: fegrus/quiz-db
+      platform: linux/amd64
       build: init/
       #volumes:
       #  - ./mysql:/var/lib/mysql
@@ -11,12 +12,14 @@ services:
     container_name: sb-server
     build: SBQuizServer/
     image: fegrus/quiz-sb-server
+    platform: linux/amd64
     depends_on:
       - db
     restart: on-failure
     ports:
       - "8080:8080"
-
+    environment:
+      "DB_URL": "db:3306"
 
 volumes:
   mysql:
