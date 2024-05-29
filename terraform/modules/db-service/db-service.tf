@@ -1,20 +1,3 @@
-provider "aws" {
-  region = local.region
-}
-
-locals {
-  name   = "quiz-db"
-  region = "eu-west-2"
-
-  container_image = "fegrus/quiz-db"
-  container_port  = 3306 # Container port is specific to this app example
-
-  tags = {
-    Blueprint  = local.name
-    GithubRepo = "github.com/FegrusB/SBQuizServer"
-  }
-}
-
 ################################################################################
 # ECS Blueprint
 ################################################################################
@@ -23,7 +6,7 @@ module "ecs_service" {
   source  = "terraform-aws-modules/ecs/aws//modules/service"
   version = "~> 5.6"
 
-  name               = local.name
+  name               = var.container_name
   desired_count      = 3
   cluster_arn        = data.aws_ecs_cluster.core_infra.arn
   enable_autoscaling = false
@@ -32,14 +15,14 @@ module "ecs_service" {
   enable_execute_command = true
 
   container_definitions = {
-    db = {
-      image                    = local.container_image
+    (var.container_name) = {
+      image                    = "${var.container_registry}${var.container_name}"
       readonly_root_filesystem = false
 
       port_mappings = [
         {
           protocol      = "tcp",
-          containerPort = local.container_port
+          containerPort = var.container_port
         }
       ]
     }
@@ -53,8 +36,8 @@ module "ecs_service" {
   security_group_rules = {
     ingress_all_service = {
       type        = "ingress"
-      from_port   = local.container_port
-      to_port     = local.container_port
+      from_port   = var.container_port
+      to_port     = var.container_port
       protocol    = "tcp"
       description = "Service port"
       cidr_blocks = ["0.0.0.0/0"]
@@ -68,11 +51,11 @@ module "ecs_service" {
     }
   }
 
-  tags = local.tags
+  tags = var.tags
 }
 
 resource "aws_service_discovery_service" "this" {
-  name = local.name
+  name = var.container_name
 
   dns_config {
     namespace_id = data.aws_service_discovery_dns_namespace.this.id
@@ -95,17 +78,20 @@ resource "aws_service_discovery_service" "this" {
 ################################################################################
 
 data "aws_subnets" "private" {
+  depends_on = [var.vpc_id]
   filter {
     name   = "tag:Name"
-    values = ["quiz-server-private-*"]
+    values = ["${var.cluster_name}-private-*"]
   }
 }
 
 data "aws_ecs_cluster" "core_infra" {
-  cluster_name = "quiz-server"
+  depends_on   = [var.cluster_name]
+  cluster_name = var.cluster_name
 }
 
 data "aws_service_discovery_dns_namespace" "this" {
-  name = "default.${data.aws_ecs_cluster.core_infra.cluster_name}.local"
-  type = "DNS_PRIVATE"
+  depends_on = [var.namespace_name]
+  name       = var.namespace_name
+  type       = "DNS_PRIVATE"
 }

@@ -1,31 +1,12 @@
-provider "aws" {
-  region = local.region
-}
-
-data "aws_availability_zones" "available" {}
-
-locals {
-  name   = "quiz-server"
-  region = "eu-west-2"
-
-  vpc_cidr = "10.0.0.0/16"
-  azs      = slice(data.aws_availability_zones.available.names, 0, 3)
-
-  tags = {
-    Blueprint  = local.name
-    GithubRepo = "github.com/FegrusB/SBQuizServer"
-  }
-}
-
 ################################################################################
-# ECS Blueprint
+# Core Infrastructure
 ################################################################################
 
 module "ecs_cluster" {
   source  = "terraform-aws-modules/ecs/aws//modules/cluster"
   version = "~> 5.6"
 
-  cluster_name = local.name
+  cluster_name = var.name
 
   cluster_service_connect_defaults = {
     namespace = aws_service_discovery_private_dns_namespace.this.arn
@@ -36,7 +17,7 @@ module "ecs_cluster" {
     FARGATE_SPOT = {}
   }
 
-  tags = local.tags
+  tags = var.tags
 }
 
 ################################################################################
@@ -44,11 +25,11 @@ module "ecs_cluster" {
 ################################################################################
 
 resource "aws_service_discovery_private_dns_namespace" "this" {
-  name        = "default.${local.name}.local"
+  name        = var.namespace_name
   description = "Service discovery <namespace>.<clustername>.local"
   vpc         = module.vpc.vpc_id
 
-  tags = local.tags
+  tags = var.tags
 }
 
 ################################################################################
@@ -59,23 +40,23 @@ module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 5.0"
 
-  name = local.name
-  cidr = local.vpc_cidr
+  name = var.name
+  cidr = var.vpc_cidr
 
-  azs             = local.azs
-  public_subnets  = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k)]
-  private_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 10)]
+  azs             = var.azs
+  public_subnets  = [for k, v in var.azs : cidrsubnet(var.vpc_cidr, 8, k)]
+  private_subnets = [for k, v in var.azs : cidrsubnet(var.vpc_cidr, 8, k + 10)]
 
   enable_nat_gateway = true
   single_nat_gateway = true
 
   # Manage so we can name
   manage_default_network_acl    = true
-  default_network_acl_tags      = { Name = "${local.name}-default" }
+  default_network_acl_tags      = { Name = "${var.name}-default" }
   manage_default_route_table    = true
-  default_route_table_tags      = { Name = "${local.name}-default" }
+  default_route_table_tags      = { Name = "${var.name}-default" }
   manage_default_security_group = true
-  default_security_group_tags   = { Name = "${local.name}-default" }
+  default_security_group_tags   = { Name = "${var.name}-default" }
 
-  tags = local.tags
+  tags = var.tags
 }
