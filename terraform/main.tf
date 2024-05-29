@@ -72,12 +72,12 @@ module "sb-service" {
   container_registry = local.container_registry
   cluster_name       = module.core-infra.cluster_name
   namespace_name     = module.core-infra.service_discovery_namespaces.name
-  region               = local.region
-  tags                 = local.tags
+  region             = local.region
+  tags               = local.tags
 
   container_port = local.sb_container_port
-  db_name              = local.db_name
-  db_port              = local.db_container_port
+  db_name        = local.db_name
+  db_port        = local.db_container_port
 
   lb_security_group_id = module.lb.alb_security_group_id
   lb_target_group_arn  = module.lb.alb_target_group_arn

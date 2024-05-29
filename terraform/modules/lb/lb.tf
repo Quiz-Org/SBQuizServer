@@ -78,7 +78,7 @@ module "alb" {
   tags = var.tags
 }
 
-data "aws_route53_zone" "route_53_zone"{
+data "aws_route53_zone" "route_53_zone" {
   name = "myquizapp.co.uk"
 }
 
