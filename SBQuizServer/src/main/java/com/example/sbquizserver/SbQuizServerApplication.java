@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.support.DatabaseStartupValidator;
 
 import javax.sql.DataSource;
-import java.sql.SQLException;
 import java.util.stream.Stream;
 
 @SpringBootApplication
@@ -20,10 +19,10 @@ public class SbQuizServerApplication {
     }
 
     @Bean
-    public DatabaseStartupValidator databaseStartupValidator(DataSource dataSource) throws SQLException {
+    public DatabaseStartupValidator databaseStartupValidator(DataSource dataSource) {
         var dsv = new DatabaseStartupValidator();
         dsv.setDataSource(dataSource);
-        dataSource.getConnection().isValid(5);
+        dsv.setValidationQuery(DatabaseDriver.MYSQL.getValidationQuery());
         return dsv;
     }
     @Bean
