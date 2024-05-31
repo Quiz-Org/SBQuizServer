@@ -20,7 +20,7 @@ public class MainController {
 
     @GetMapping("/quiz/all")
     @ResponseBody
-    public Iterable<Quiz> getAllUsers(){return quizService.findAll();}
+    public ArrayList<Quiz> getAllQuizzes(){return quizService.findAll();}
 
     @GetMapping("/quiz/QA")
     @ResponseBody

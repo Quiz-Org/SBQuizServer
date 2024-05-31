@@ -35,6 +35,10 @@ public class QuizService {
         return quiz;
     }
 
-    public Iterable<Quiz> findAll(){return quizRepository.findAll();}
+    public ArrayList<Quiz> findAll(){
+        ArrayList<Quiz> quizzes = new ArrayList<>();
+        quizRepository.findAll().forEach(quizzes::add);
+        return quizzes;
+    }
 
 }
