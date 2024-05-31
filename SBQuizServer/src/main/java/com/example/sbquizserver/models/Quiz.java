@@ -15,6 +15,14 @@ public class Quiz {
     private String Name;
     private String Description;
 
+    public Quiz() {}
+
+    public Quiz(Integer _id, String Name, String Description) {
+        this._id = _id;
+        this.Name = Name;
+        this.Description = Description;
+    }
+
     public Integer get_id() {return _id;}
     public String getName() {return Name;}
     public String getDescription() {return Description;}

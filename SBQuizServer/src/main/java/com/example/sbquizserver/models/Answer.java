@@ -16,6 +16,15 @@ public class Answer {
     private String AnswerText;
     private boolean Correct;
 
+    public Answer() {}
+
+    public Answer(Integer _id, Integer questionId, String AnswerText, boolean Correct) {
+        this._id = _id;
+        this.questionId = questionId;
+        this.AnswerText = AnswerText;
+        this.Correct = Correct;
+    }
+
     public Integer get_id() {return _id;}
     public Integer getQuestionId() {return questionId;}
     public String getAnswerText() {return AnswerText;}

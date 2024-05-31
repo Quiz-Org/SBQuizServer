@@ -15,6 +15,14 @@ public class Question {
     private Integer quizId;
     private String questionText;
 
+    public Question() {}
+
+    public Question(Integer _id, Integer quizId, String questionText) {
+        this._id = _id;
+        this.quizId = quizId;
+        this.questionText = questionText;
+    }
+
     public Integer get_id(){return this._id;}
     public Integer getQuizId(){return this.quizId;}
     public String getQuestionText() {return questionText;}
