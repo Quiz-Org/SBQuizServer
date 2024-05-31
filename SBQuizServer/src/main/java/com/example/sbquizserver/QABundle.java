@@ -1,7 +1,5 @@
 package com.example.sbquizserver;
 
-
-
 import com.example.sbquizserver.models.Answer;
 import com.example.sbquizserver.models.Question;
 import com.example.sbquizserver.repos.AnswerRepository;
@@ -16,18 +14,13 @@ public class QABundle {
     public QABundle(Question question, AnswerRepository answerRepository){
 
         this.question = question;
-
         this.answers = answerRepository.findByQuestionId(question.get_id());
 
     }
 
     @SuppressWarnings("unused")
-    public Question getQuestion() {
-        return question;
-    }
+    public Question getQuestion() {return question;}
 
     @SuppressWarnings("unused")
-    public List<Answer> getAnswers() {
-        return answers;
-    }
+    public List<Answer> getAnswers() {return answers;}
 }
