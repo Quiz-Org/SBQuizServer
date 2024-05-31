@@ -1,8 +1,6 @@
 package com.example.sbquizserver;
 
 import com.example.sbquizserver.models.Quiz;
-import com.example.sbquizserver.repos.AnswerRepository;
-import com.example.sbquizserver.repos.QuestionRepository;
 import com.example.sbquizserver.repos.QuizRepository;
 
 import org.junit.jupiter.api.Assertions;
@@ -18,21 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
-class QuizServiceTest {
+class QuizServiceFindAllTest {
 
     static final ArrayList<Quiz> quizzes = new ArrayList<>(List.of(
             new Quiz(0,"first test quiz","the first test quiz"),
             new Quiz(1,"second test quiz","the second test quiz"),
             new Quiz(3,"third test quiz","the third test quiz")
     ));
-
-
-
-    @Mock
-    QuestionRepository questionRepository;
-
-    @Mock
-    AnswerRepository answerRepository;
 
     @Mock
     QuizRepository quizRepository;
@@ -50,8 +40,5 @@ class QuizServiceTest {
         ArrayList<Quiz> quizzesReturned = quizService.findAll();
         Assertions.assertEquals(quizzesReturned,quizzes);
     }
-
-
-
 
 }
