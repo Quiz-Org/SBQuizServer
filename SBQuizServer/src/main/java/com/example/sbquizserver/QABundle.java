@@ -6,6 +6,7 @@ import com.example.sbquizserver.repos.AnswerRepository;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class QABundle {
 
     private final Question question;
@@ -18,9 +19,7 @@ public class QABundle {
 
     }
 
-    @SuppressWarnings("unused")
     public Question getQuestion() {return question;}
-
-    @SuppressWarnings("unused")
     public List<Answer> getAnswers() {return answers;}
+
 }

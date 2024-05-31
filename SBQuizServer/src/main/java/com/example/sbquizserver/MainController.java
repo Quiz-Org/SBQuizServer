@@ -1,10 +1,6 @@
 package com.example.sbquizserver;
 
-import com.example.sbquizserver.models.Question;
 import com.example.sbquizserver.models.Quiz;
-import com.example.sbquizserver.repos.AnswerRepository;
-import com.example.sbquizserver.repos.QuestionRepository;
-import com.example.sbquizserver.repos.QuizRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,33 +13,17 @@ import java.util.ArrayList;
 @Controller
 public class MainController {
 
-    private final QuizRepository quizRepository;
-    private final QuestionRepository questionRepository;
-    private final AnswerRepository answerRepository;
+    private final QuizService quizService;
 
     @Autowired
-    public MainController(QuizRepository quizRepository, QuestionRepository questionRepository, AnswerRepository answerRepository) {
-        this.quizRepository = quizRepository;
-        this.questionRepository = questionRepository;
-        this.answerRepository = answerRepository;
-    }
+    public MainController(QuizService quizService) {this.quizService = quizService;}
 
     @GetMapping("/quiz/all")
     @ResponseBody
-    public Iterable<Quiz> getAllUsers(){return quizRepository.findAll();}
+    public Iterable<Quiz> getAllUsers(){return quizService.findAll();}
 
     @GetMapping("/quiz/QA")
     @ResponseBody
-    public ArrayList<QABundle> getQuizData(@RequestParam Integer quizId){
-
-        ArrayList<QABundle> response = new ArrayList<>();
-        ArrayList<Question> questions = new ArrayList<>(questionRepository.findAllByQuizIdEquals(quizId));
-
-        for(Question question : questions){response.add(new QABundle(question,answerRepository));}
-
-        return response;
-
-    }
-
+    public ArrayList<QABundle> getQuizData(@RequestParam Integer quizId){ return quizService.getQuizData(quizId);}
 
 }
