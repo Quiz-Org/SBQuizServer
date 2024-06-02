@@ -1,5 +1,6 @@
-package com.example.sbquizserver;
+package com.example.sbquizserver.unitTests;
 
+import com.example.sbquizserver.QuizService;
 import com.example.sbquizserver.models.Quiz;
 import com.example.sbquizserver.repos.QuizRepository;
 

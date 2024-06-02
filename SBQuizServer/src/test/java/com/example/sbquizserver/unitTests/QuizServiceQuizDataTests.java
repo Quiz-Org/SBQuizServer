@@ -1,12 +1,11 @@
-package com.example.sbquizserver;
+package com.example.sbquizserver.unitTests;
 
+import com.example.sbquizserver.QABundle;
+import com.example.sbquizserver.QuizService;
 import com.example.sbquizserver.models.Answer;
 import com.example.sbquizserver.models.Question;
-import com.example.sbquizserver.models.Quiz;
 import com.example.sbquizserver.repos.AnswerRepository;
 import com.example.sbquizserver.repos.QuestionRepository;
-import com.example.sbquizserver.repos.QuizRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,17 +14,13 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.ArrayList;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 public class QuizServiceQuizDataTests {
-
-    static final ArrayList<Quiz> quizzes = new ArrayList<>(List.of(
-            new Quiz(0,"first test quiz","the first test quiz"),
-            new Quiz(1,"second test quiz","the second test quiz"),
-            new Quiz(3,"third test quiz","the third test quiz")
-    ));
 
     static final ArrayList<Question> questions = new ArrayList<>(List.of(
             new Question(0,2,"first question"),
@@ -48,9 +43,6 @@ public class QuizServiceQuizDataTests {
     @Mock
     AnswerRepository answerRepository;
 
-    @Mock
-    QuizRepository quizRepository;
-
     @InjectMocks
     QuizService quizService;
 
@@ -59,14 +51,19 @@ public class QuizServiceQuizDataTests {
         Mockito.when(questionRepository.findAllByQuizIdEquals(2)).thenReturn(questions);
 
         Mockito.when(answerRepository.findByQuestionId(0)).thenReturn(answers.subList(0,2));
-        Mockito.when(answerRepository.findByQuestionId(0)).thenReturn(answers.subList(2,5));
-        Mockito.when(answerRepository.findByQuestionId(0)).thenReturn(answers.subList(5,6));
+        Mockito.when(answerRepository.findByQuestionId(1)).thenReturn(answers.subList(2,4));
+        Mockito.when(answerRepository.findByQuestionId(2)).thenReturn(answers.subList(4,6));
 
     }
 
     @Test
     void getQuizDataTest(){
         ArrayList<QABundle> bundle = quizService.getQuizData(2);
-        Assertions.assertEquals(bundle.getFirst().getQuestion(),questions.getFirst());
+        assertThat(bundle).hasSize(3);
+        assertThat(bundle.getFirst().getQuestion()).isEqualTo(questions.getFirst());
+        assertThat(bundle.getLast().getQuestion()).isEqualTo(questions.getLast());
+        assertThat(bundle.getFirst().getAnswers()).hasSize(2).first().isEqualTo(answers.getFirst());
+        assertThat(bundle.getLast().getAnswers()).hasSize(2).first().isEqualTo(answers.get(4));
+
     }
 }
