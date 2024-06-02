@@ -25,6 +25,7 @@ import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItems;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class mainControllerIntegrationTests {
@@ -74,7 +75,7 @@ public class mainControllerIntegrationTests {
                 .get("/quiz/all")
                 .then()
                 .statusCode(200)
-                .body("name",hasItem("History"));
+                .body("name",hasItems(quizzes.getFirst().getName(),quizzes.getLast().getName()));
 
         //List<Quiz> quizzes = response.getBody().as(Quiz.class);
 
