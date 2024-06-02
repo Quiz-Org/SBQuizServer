@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.hasItem;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class mainControllerIntegrationTests {
@@ -67,15 +68,15 @@ public class mainControllerIntegrationTests {
 
     @Test
     void getAllTest(){
-        Response response = given()
+        given()
                 .contentType(ContentType.JSON)
                 .when()
                 .get("/quiz/all")
                 .then()
                 .statusCode(200)
-                .extract().response();
+                .body("name",hasItem("History"));
 
-        List<Quiz> quizzes = response.getBody().as(Quiz.class);
+        //List<Quiz> quizzes = response.getBody().as(Quiz.class);
 
         System.out.println();
     }
