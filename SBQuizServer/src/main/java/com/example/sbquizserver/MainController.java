@@ -3,12 +3,16 @@ package com.example.sbquizserver;
 import com.example.sbquizserver.models.Quiz;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import static org.springframework.http.HttpStatus.OK;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
+
+
 
 @Controller
 public class MainController {
@@ -20,10 +24,10 @@ public class MainController {
 
     @GetMapping("/quiz/all")
     @ResponseBody
-    public ArrayList<Quiz> getAllQuizzes(){return quizService.findAll();}
+    public ResponseEntity<ArrayList<Quiz>> getAllQuizzes(){return ResponseEntity.status(OK).body(quizService.findAll());}
 
-    @GetMapping("/quiz/QA")
+    @GetMapping("/quiz/{quizId}")
     @ResponseBody
-    public ArrayList<QABundle> getQuizData(@RequestParam Integer quizId){ return quizService.getQuizData(quizId);}
+    public ResponseEntity<ArrayList<QABundle>> getQuizData(@PathVariable Integer quizId){ return ResponseEntity.status(OK).body(quizService.getQuizData(quizId));}
 
 }
