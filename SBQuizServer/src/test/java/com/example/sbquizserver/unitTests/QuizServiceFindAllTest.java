@@ -14,16 +14,11 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
-import java.util.List;
+
+import static com.example.sbquizserver.testUtils.QUIZZES;
 
 @ExtendWith(MockitoExtension.class)
 class QuizServiceFindAllTest {
-
-    static final ArrayList<Quiz> quizzes = new ArrayList<>(List.of(
-            new Quiz(0,"first test quiz","the first test quiz"),
-            new Quiz(1,"second test quiz","the second test quiz"),
-            new Quiz(3,"third test quiz","the third test quiz")
-    ));
 
     @Mock
     QuizRepository quizRepository;
@@ -33,13 +28,13 @@ class QuizServiceFindAllTest {
 
     @BeforeEach
     void setUp() {
-        Mockito.when(quizRepository.findAll()).thenReturn(quizzes);
+        Mockito.when(quizRepository.findAll()).thenReturn(QUIZZES);
     }
 
     @Test
     void findAllTest(){
         ArrayList<Quiz> quizzesReturned = quizService.findAll();
-        Assertions.assertEquals(quizzesReturned,quizzes);
+        Assertions.assertEquals(quizzesReturned,QUIZZES);
     }
 
 }

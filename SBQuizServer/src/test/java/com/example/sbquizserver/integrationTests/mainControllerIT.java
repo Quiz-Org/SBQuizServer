@@ -1,13 +1,8 @@
 package com.example.sbquizserver.integrationTests;
 
-import com.example.sbquizserver.models.Answer;
-import com.example.sbquizserver.models.Question;
-import com.example.sbquizserver.models.Quiz;
 import com.example.sbquizserver.repos.AnswerRepository;
 import com.example.sbquizserver.repos.QuestionRepository;
 import com.example.sbquizserver.repos.QuizRepository;
-
-import static com.example.sbquizserver.testUtils.QUIZZES;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -22,15 +17,14 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MySQLContainer;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import static com.example.sbquizserver.testUtils.QUIZZES;
+import static com.example.sbquizserver.testUtils.QUESTIONS;
+import static com.example.sbquizserver.testUtils.ANSWERS;
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class mainControllerIntegrationTests {
+public class mainControllerIT {
 
     @LocalServerPort
     private Integer port;
@@ -39,23 +33,9 @@ public class mainControllerIntegrationTests {
             .withDatabaseName("myquizappdb")
             .withInitScript("testContainer.sql");
 
-    static final ArrayList<Question> questions = new ArrayList<>(List.of(
-            new Question(0,2,"first question"),
-            new Question(1,2,"second question"),
-            new Question(2,2,"third question")
-    ));
-
-    static final ArrayList<Answer> answers = new ArrayList<>(List.of(
-            new Answer(0,0,"first answer",true),
-            new Answer(1,0,"second answer",false),
-            new Answer(2,1,"third answer",true),
-            new Answer(3,1,"fourth answer",false),
-            new Answer(4,2,"fifth answer",true),
-            new Answer(5,2,"sixth answer",false)
-    ));
-
     @BeforeAll
-    static void beforeAll(){mySQLContainer.start();}
+    static void beforeAll(){
+        mySQLContainer.start();}
 
     @AfterAll
     static void afterAll(){mySQLContainer.stop();}
@@ -92,15 +72,16 @@ public class mainControllerIntegrationTests {
 
     @Test
     void getSingleQuizTest(){
-        Quiz quiz = QUIZZES.getFirst();
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/quiz/QA?={id}", quiz.get_id())
+                .get("/quiz/{id}", 0)
                 .then()
                 .statusCode(200)
-                .body("name", equalTo(quiz.getName()))
-                .body("answerText",hasItems("1 0r 0","Anything from one to 10"));
+                .body("question.questionText", hasItem(QUESTIONS.getFirst().getQuestionText()))
+                .body("answers.answerText.flatten()",hasItems(ANSWERS.getFirst().getAnswerText(),ANSWERS.get(4).getAnswerText()));
     }
+
+    //
 
 }
