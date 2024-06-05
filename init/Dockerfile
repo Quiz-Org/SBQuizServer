@@ -1,10 +1,12 @@
-FROM mysql:5.7.15
+FROM mysql:8.4.0
 
 MAINTAINER fegrus
 
-ENV MYSQL_DATABASE=<myQuizAppDB> \
-    MYSQL_ROOT_PASSWORD=<MYSQL_ROOT_PASSWORD>
+ENV MYSQL_RANDOM_ROOT_PASSWORD=yes
 
-ADD myquizappdb.sql /docker-entrypoint-initdb.d
+COPY init.sh /docker-entrypoint-initdb.d
 
-EXPOSE 3306
+COPY table_check.sh /usr/local/
+
+COPY sql /usr/local/mysql
+
