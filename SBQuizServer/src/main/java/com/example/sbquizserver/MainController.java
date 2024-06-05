@@ -3,6 +3,8 @@ package com.example.sbquizserver;
 import com.example.sbquizserver.models.Quiz;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,6 +30,8 @@ public class MainController {
 
     @GetMapping("/quiz/{quizId}")
     @ResponseBody
-    public ResponseEntity<ArrayList<QABundle>> getQuizData(@PathVariable Integer quizId){ return ResponseEntity.status(OK).body(quizService.getQuizData(quizId));}
-
+    public ResponseEntity<ArrayList<QABundle>> getQuizData(@PathVariable Integer quizId){
+        ArrayList<QABundle> quizData = quizService.getQuizData(quizId);
+        if (quizData.isEmpty()){return ResponseEntity.status(NOT_FOUND).body(quizData);}
+        return ResponseEntity.status(OK).body(quizData);}
 }

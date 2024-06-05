@@ -19,19 +19,18 @@ public class QuizService {
     private final QuizRepository quizRepository;
 
     @Autowired
-    public QuizService(QuizRepository quizRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, QuizRepository quizRepository1) {
+    public QuizService(QuizRepository quizRepository, QuestionRepository questionRepository, AnswerRepository answerRepository) {
         this.questionRepository = questionRepository;
         this.answerRepository = answerRepository;
-        this.quizRepository = quizRepository1;
+        this.quizRepository = quizRepository;
     }
 
     public ArrayList<QABundle> getQuizData(Integer quizId){
-
         ArrayList<QABundle> quiz = new ArrayList<>();
         ArrayList<Question> questions = new ArrayList<>(questionRepository.findAllByQuizIdEquals(quizId));
 
+        if (questions.isEmpty()){return quiz;}
         for(Question question : questions){quiz.add(new QABundle(question,answerRepository));}
-
         return quiz;
     }
 

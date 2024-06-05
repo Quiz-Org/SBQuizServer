@@ -82,6 +82,14 @@ public class mainControllerIT {
                 .body("answers.answerText.flatten()",hasItems(ANSWERS.getFirst().getAnswerText(),ANSWERS.get(4).getAnswerText()));
     }
 
-    //
-
+    @Test
+    void quizNotFound(){
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/quiz/{id}", 50)
+                .then()
+                .statusCode(404)
+                .body("A",empty());
+    }
 }
