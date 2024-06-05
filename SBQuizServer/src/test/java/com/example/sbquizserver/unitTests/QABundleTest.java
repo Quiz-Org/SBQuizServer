@@ -13,6 +13,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static com.example.sbquizserver.testUtils.ANSWERS;
+import static com.example.sbquizserver.testUtils.QUESTIONS;
 
 @ExtendWith(MockitoExtension.class)
 class QABundleTest {
@@ -22,12 +23,12 @@ class QABundleTest {
 
     @BeforeEach
     void setUp(){
-        Mockito.when(answerRepository.findByQuestionId(0)).thenReturn(ANSWERS.subList(0,4));
+        Mockito.when(answerRepository.findByQuestionId(1)).thenReturn(ANSWERS.subList(0,4));
     }
 
     @Test
     void getAnswers() {
-        Question question = new Question(0,2,"question text");
+        Question question = QUESTIONS.getFirst();
         QABundle bundle = new QABundle(question,answerRepository);
         Assertions.assertEquals(bundle.getAnswers(),ANSWERS.subList(0,4));
     }

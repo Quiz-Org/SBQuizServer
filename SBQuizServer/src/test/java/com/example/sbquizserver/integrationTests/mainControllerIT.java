@@ -75,7 +75,7 @@ public class mainControllerIT {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/quiz/{id}", 0)
+                .get("/quiz/{id}", 1)
                 .then()
                 .statusCode(200)
                 .body("question.questionText", hasItem(QUESTIONS.getFirst().getQuestionText()))

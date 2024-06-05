@@ -33,21 +33,20 @@ public class QuizServiceQuizDataTests {
 
     @BeforeEach
     void setUp() {
-        Mockito.when(questionRepository.findAllByQuizIdEquals(0)).thenReturn(QUESTIONS.subList(0,2));
+        Mockito.when(questionRepository.findAllByQuizIdEquals(1)).thenReturn(QUESTIONS.subList(0,2));
 
-        Mockito.when(answerRepository.findByQuestionId(0)).thenReturn(ANSWERS.subList(0,4));
-        Mockito.when(answerRepository.findByQuestionId(1)).thenReturn(ANSWERS.subList(4,8));
-
+        Mockito.when(answerRepository.findByQuestionId(1)).thenReturn(ANSWERS.subList(0,4));
+        Mockito.when(answerRepository.findByQuestionId(2)).thenReturn(ANSWERS.subList(4,8));
     }
 
     @Test
     void getQuizDataTest(){
-        ArrayList<QABundle> bundle = quizService.getQuizData(0);
+        ArrayList<QABundle> bundle = quizService.getQuizData(1);
         assertThat(bundle).hasSize(2);
         assertThat(bundle.getFirst().getQuestion()).isEqualTo(QUESTIONS.getFirst());
         assertThat(bundle.getLast().getQuestion()).isEqualTo(QUESTIONS.get(1));
         assertThat(bundle.getFirst().getAnswers()).hasSize(4).first().isEqualTo(ANSWERS.getFirst());
         assertThat(bundle.getLast().getAnswers()).hasSize(4).first().isEqualTo(ANSWERS.get(4));
-
     }
+
 }
