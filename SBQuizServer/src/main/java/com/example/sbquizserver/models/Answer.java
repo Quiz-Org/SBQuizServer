@@ -3,7 +3,9 @@ package com.example.sbquizserver.models;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
+
 @Entity
 @Table(name = "answer")
 public class Answer {
@@ -13,6 +15,15 @@ public class Answer {
     private Integer questionId;
     private String AnswerText;
     private boolean Correct;
+
+    public Answer() {}
+
+    public Answer(Integer _id, Integer questionId, String AnswerText, boolean Correct) {
+        this._id = _id;
+        this.questionId = questionId;
+        this.AnswerText = AnswerText;
+        this.Correct = Correct;
+    }
 
     public Integer get_id() {return _id;}
     public Integer getQuestionId() {return questionId;}

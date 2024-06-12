@@ -1,42 +1,37 @@
 package com.example.sbquizserver;
 
-import com.example.sbquizserver.models.Question;
 import com.example.sbquizserver.models.Quiz;
-import com.example.sbquizserver.repos.AnswerRepository;
-import com.example.sbquizserver.repos.QuestionRepository;
-import com.example.sbquizserver.repos.QuizRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
+
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.OK;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 
+
+
 @Controller
 public class MainController {
 
+    private final QuizService quizService;
+
     @Autowired
-    private QuizRepository quizRepository;
-    @Autowired
-    private QuestionRepository questionRepository;
-    @Autowired
-    private AnswerRepository answerRepository;
+    public MainController(QuizService quizService) {this.quizService = quizService;}
 
     @GetMapping("/quiz/all")
-    public @ResponseBody Iterable<Quiz> getAllUsers(){return quizRepository.findAll();}
-
-    @GetMapping("/quiz/QA")
     @ResponseBody
-    public ArrayList<QABundle> getQuizData(@RequestParam
-                                    Integer quizId){
-        ArrayList<QABundle> response = new ArrayList<>();
-        ArrayList<Question> questions = new ArrayList<>(questionRepository.findAllByQuizIdEquals(quizId));
-        for(Question question : questions){
-            response.add(new QABundle(question,answerRepository));}
-        return response;
+    public ResponseEntity<ArrayList<Quiz>> getAllQuizzes(){return ResponseEntity.status(OK).body(quizService.findAll());}
 
-    }
-
-
+    @GetMapping("/quiz/{quizId}")
+    @ResponseBody
+    public ResponseEntity<ArrayList<QABundle>> getQuizData(@PathVariable Integer quizId){
+        ArrayList<QABundle> quizData = quizService.getQuizData(quizId);
+        if (quizData.isEmpty()){return ResponseEntity.status(NOT_FOUND).body(quizData);}
+        return ResponseEntity.status(OK).body(quizData);}
 }

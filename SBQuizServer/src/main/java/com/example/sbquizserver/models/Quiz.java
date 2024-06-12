@@ -3,8 +3,8 @@ package com.example.sbquizserver.models;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import org.apache.commons.lang3.builder.EqualsBuilder;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
 
 @Entity
 @Table( name = "quiz" )
@@ -14,6 +14,14 @@ public class Quiz {
     private Integer _id;
     private String Name;
     private String Description;
+
+    public Quiz() {}
+
+    public Quiz(Integer _id, String Name, String Description) {
+        this._id = _id;
+        this.Name = Name;
+        this.Description = Description;
+    }
 
     public Integer get_id() {return _id;}
     public String getName() {return Name;}
