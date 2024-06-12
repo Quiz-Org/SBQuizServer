@@ -16,8 +16,6 @@ import java.util.ArrayList;
 @Controller
 public class MainController {
 
-    //test1
-
     @Autowired
     private QuizRepository quizRepository;
     @Autowired
