@@ -23,8 +23,9 @@ import static com.example.sbquizserver.testUtils.ANSWERS;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
+@SuppressWarnings("NewClassNamingConvention")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class mainControllerIT {
+public class mainControllerIntegrationTest {
 
     @LocalServerPort
     private Integer port;

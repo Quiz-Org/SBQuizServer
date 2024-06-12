@@ -32,7 +32,7 @@ CREATE TABLE `answer` (
                           FOREIGN KEY (`question_id`) REFERENCES question(`_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `quiz` (`_id`, `name`, `description`, `num_quests`) VALUES
+INSERT INTO `quiz` (`name`, `description`, `num_quests`) VALUES
                                                                     ('History', 'A short quiz on general history.', 2),
                                                                     ('Bits and Bytes', 'A short quiz about basic data quantities', 5);
 
@@ -43,14 +43,14 @@ INSERT INTO `quiz` (`_id`, `name`, `description`, `num_quests`) VALUES
 -- Dumping data for table `question`
 --
 
-INSERT INTO `question` (`_id`, `quiz_id`, `question_text`) VALUES
-                                                               (0, 'What year was The Battle of Hastings?'),
-                                                               (0, 'How many different wives did Henry VIII have?'),
-                                                               (1, 'What values can a bit hold?'),
-                                                               (1, 'How many bits make a nibble?'),
-                                                               (1, 'How many bits are there in a byte?'),
-                                                               (1, 'What is the biggest value a byte can hold?'),
-                                                               (1, '1024 bytes equals what?');
+INSERT INTO `question` (`quiz_id`, `question_text`) VALUES
+                                                               (1, 'What year was The Battle of Hastings?'),
+                                                               (1, 'How many different wives did Henry VIII have?'),
+                                                               (2, 'What values can a bit hold?'),
+                                                               (2, 'How many bits make a nibble?'),
+                                                               (2, 'How many bits are there in a byte?'),
+                                                               (2, 'What is the biggest value a byte can hold?'),
+                                                               (2, '1024 bytes equals what?');
 
 -- --------------------------------------------------------
 
@@ -59,32 +59,32 @@ INSERT INTO `question` (`_id`, `quiz_id`, `question_text`) VALUES
 -- Dumping data for table `answer`
 --
 
-INSERT INTO `answer` (`_id`, `question_id`, `answer_text`, `correct`) VALUES
-                                                                          (0, '1066', 1),
-                                                                          (0, '1939', 0),
-                                                                          (0, '45', 0),
-                                                                          (0, '1010', 0),
-                                                                          (1, '6', 1),
-                                                                          (1, '0', 0),
-                                                                          (1, '64', 0),
-                                                                          (1, '8', 0),
-                                                                          (2, '1 0r 0', 1),
-                                                                          (2, 'Only 7', 0),
-                                                                          (2, 'Anything from one to 10', 0),
-                                                                          (2, 'No value at all', 0),
-                                                                          (3, '4', 1),
-                                                                          (3, 'A half', 0),
-                                                                          (3, '7', 0),
-                                                                          (3, '64', 0),
-                                                                          (4, '8', 1),
+INSERT INTO `answer` (`question_id`, `answer_text`, `correct`) VALUES
+                                                                          (1, '1066', 1),
+                                                                          (1, '1939', 0),
+                                                                          (1, '45', 0),
+                                                                          (1, '1010', 0),
+                                                                          (2, '6', 1),
+                                                                          (2, '0', 0),
+                                                                          (2, '64', 0),
+                                                                          (2, '8', 0),
+                                                                          (3, '1 0r 0', 1),
+                                                                          (3, 'Only 7', 0),
+                                                                          (3, 'Anything from one to 10', 0),
+                                                                          (3, 'No value at all', 0),
+                                                                          (4, '4', 1),
+                                                                          (4, 'A half', 0),
+                                                                          (4, '7', 0),
                                                                           (4, '64', 0),
-                                                                          (4, '128', 0),
-                                                                          (4, '1024', 0),
-                                                                          (5, '255', 1),
-                                                                          (5, '10000000', 0),
-                                                                          (5, '42', 0),
-                                                                          (5, '256', 0),
-                                                                          (6, '1 KiloByte', 1),
-                                                                          (6, '1 GigaByte', 0),
-                                                                          (6, '4 KiloBytes', 0),
-                                                                          (6, '1 Elephant', 0);
+                                                                          (5, '8', 1),
+                                                                          (5, '64', 0),
+                                                                          (5, '128', 0),
+                                                                          (5, '1024', 0),
+                                                                          (6, '255', 1),
+                                                                          (6, '10000000', 0),
+                                                                          (6, '42', 0),
+                                                                          (6, '256', 0),
+                                                                          (7, '1 KiloByte', 1),
+                                                                          (7, '1 GigaByte', 0),
+                                                                          (7, '4 KiloBytes', 0),
+                                                                          (7, '1 Elephant', 0);
