@@ -21,7 +21,6 @@ public class MainController {
 
     private final QuizService quizService;
 
-
     @Autowired
     public MainController(QuizService quizService) {this.quizService = quizService;}
 
