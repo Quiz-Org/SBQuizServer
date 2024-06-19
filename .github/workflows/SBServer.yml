@@ -8,6 +8,9 @@
 
 name: SB-Server build, test and push
 
+env:
+  DEFAULT_BUMP: patch
+
 on:
   push:
     branches: [ "master" ]
@@ -22,6 +25,8 @@ jobs:
     steps:
 
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: '0'
 
     - name: Set up JDK 22
       uses: actions/setup-java@v3
@@ -35,3 +40,9 @@ jobs:
 
     - name: Build the Docker image
       run: docker build SBQuizServer/. --file SBQuizServer/Dockerfile --tag quiz-sb-server:${{github.ref_name}}
+
+    - name: Bump version and push tag
+      uses: anothrNick/github-tag-action@v1 # Don't use @master or @v1 unless you're happy to test the latest version
+      env:
+        GITHUB_TOKEN: ${{ secrets._GITHUB_TOKEN }} # if you don't want to set write permissions use a PAT token
+        WITH_V: false
