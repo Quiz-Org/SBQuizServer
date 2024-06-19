@@ -28,7 +28,7 @@ class QABundleTest {
 
     @Test
     void getAnswers() {
-        Question question = QUESTIONS.getLast();
+        Question question = QUESTIONS.getFirst();
         QABundle bundle = new QABundle(question,answerRepository);
         Assertions.assertEquals(bundle.getAnswers(),ANSWERS.subList(0,4));
     }
