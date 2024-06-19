@@ -56,4 +56,4 @@ jobs:
         context: SBQuizServer/.
         file: SBQuizServer/Dockerfile
         push: true
-        tags: fegrus/quiz-sb-server:${{step.tag.outputs.tag}}
+        tags: fegrus/quiz-sb-server:${{steps.tag.outputs.tag}}
