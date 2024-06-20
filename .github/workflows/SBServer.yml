@@ -10,6 +10,8 @@ name: SB-Server build, test and push
 
 env:
   DEFAULT_BUMP: patch
+  APP_IMAGE: fegrus/quiz-sb-server
+  GITOPS_REPO: Quiz-Org/quiz-kubernetes
 
 on:
   push:
@@ -57,4 +59,29 @@ jobs:
         context: SBQuizServer/.
         file: SBQuizServer/Dockerfile
         push: true
-        tags: fegrus/quiz-sb-server:${{steps.tag.outputs.tag}}
+        tags: ${{env.APP_IMAGE}}:${{steps.tag.outputs.tag}}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+    steps:
+
+      - uses: actions/checkout@v2
+        with:
+          repository: ${{env.GITOPS_REPO}}
+          token: ${{secrets._GITHUB_TOKEN}}
+
+      - uses: imranismail/setup-kustomize@v1
+        with:
+          kustomize-version: 4.0.0
+
+      - run: kustomize edit set image ${{env.APP_IMAGE}}:${{steps.tag.outputs.tag}}
+        working-directory: quiz-server/
+
+      - run: |
+          git config user.email "gitops@myquizapp.co.uk"
+          git config user.name "gitops"
+          git commit -am "Gitops update to $APP_IMAGE"
+          git pull --rebase
+          git push
