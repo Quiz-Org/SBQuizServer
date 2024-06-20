@@ -24,8 +24,10 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    steps:
+    outputs:
+      tag: ${{ steps.tag.outputs.tag }}
 
+    steps:
     - uses: actions/checkout@v4
       with:
         fetch-depth: '0'
@@ -76,7 +78,7 @@ jobs:
         with:
           kustomize-version: 4.0.0
 
-      - run: kustomize edit set image ${{env.APP_IMAGE}}:${{steps.tag.outputs.tag}}
+      - run: kustomize edit set image ${{env.APP_IMAGE}}:${{needs.build.outputs.tag}}
         working-directory: quiz-server/
 
       - run: |
