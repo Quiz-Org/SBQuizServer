@@ -15,10 +15,10 @@ COPY ./src ./src
 RUN mvn clean install -Dmaven.test.skip=true
 #Stage 2
 # set base image for second stage
-FROM amazoncorretto:22.0.0-al2023-headless
+FROM eclipse-temurin:22.0.1_8-jre-ubi9-minimal
 # set deployment directory
 WORKDIR /opt/quiz
 # copy over the built artifact from the maven image
-COPY --from=stage1 /opt/quiz/target/SBQuizServer-0.0.1-SNAPSHOT.jar /opt/quiz
+COPY --from=stage1 /opt/quiz/target/Quiz-Service.jar /opt/quiz
 
-CMD ["java", "-jar", "SBQuizServer-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "Quiz-Service.jar"]
