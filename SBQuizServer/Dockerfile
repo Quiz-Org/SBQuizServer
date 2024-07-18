@@ -1,6 +1,6 @@
 #Stage 1
 # initialize build and set base image for first stage
-FROM maven:3.9.7-amazoncorretto-21 as stage1
+FROM maven:3.9.8-eclipse-temurin-22 as stage1
 # speed up Maven JVM a bit
 ENV MAVEN_OPTS="-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
 # set working directory
