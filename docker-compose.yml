@@ -5,7 +5,7 @@ services:
       container_name: db
       image: fegrus/quiz-db
       ports:
-        - "3306:3306"
+        - "3000:3306"
       environment:
         "MYSQL_DB": "myquizappdb"
         "MYSQL_USER": "user"
@@ -21,7 +21,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      "DB_URL": "db:3306"
+      "DB_URL": "db:3000"
       "MYSQL_DB": "myquizappdb"
       "MYSQL_USER": "user"
       "MYSQL_PASSWORD": "password"
@@ -30,7 +30,7 @@ services:
       - "traefik.http.routers.sb-server.rule=Host(`localhost`)"
       - "traefik.http.routers.sb-server.entrypoints=web-secure"
       - "traefik.http.routers.sb-server.tls=true"
-      #- "traefik.http.middlewares.test-auth.forwardauth.address=https://example.com/auth"
+      - "traefik.http.middlewares.test-auth.forwardauth.address=https://example.com/auth"
     profiles: [sb-server, all]
   db_keycloak:
     container_name: db_keycloak
@@ -39,8 +39,8 @@ services:
     ports:
       - "3307:3306"
     environment:
-      MYSQL_RANDOM_ROOT_PASSWORD: true
-      MYSQL_DB: "keycloak_db"
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "keycloak"
       MYSQL_USER: "user"
       MYSQL_PASSWORD: "password"
     volumes:
@@ -64,19 +64,34 @@ services:
     ports:
       - "8081:8080"
     environment:
-      DB_VENDOR: MYSQL
-      DB_ADDR: db_keycloak:3307
-      DB_SCHEMA: public
-      DB_DATABASE: keycloak_db
-      DB_USER: user
-      DB_PASSWORD: password
-      KEYCLOAK_HOSTNAME: myquizapp-keycloak-auth
+      #DB_VENDOR: MYSQL
+      KC_DB_URL_HOST: db_keycloak
+      KC_DB_URL_PORT: 3307
+      KC_DB_SCHEMA: public
+      KC_DB: mysql
+      #KC_DB: keycloak_db
+      KC_DB_USERNAME: root
+      KC_DB_PASSWORD: root
       KEYCLOAK_ADMIN: admin
+      KEYCLOAK_HOSTNAME: myquizapp-keycloak-auth
       KEYCLOAK_ADMIN_PASSWORD: admin
-    command:
-      - start-dev
     depends_on:
       - db_keycloak
+    command:
+      - start-dev
+  auth-proxy:
+    image: quay.io/oauth2-proxy/oauth2-proxy:latest-amd64
+    command:
+      -  "--provider=keycloak-oidc"
+      -  "--client-id=quiz-client"
+      -  "--client-secret=kE8umEfAthCmhVoxXmBzIxiyiuXtDqBL"
+      -  "--redirect-url=http://localhost/oauth2/callback"
+      -  "--oidc-issuer-url=http://localhost/realms/quiz-realm"
+      -  "--allowed-role=quiz-role"
+      -  "--allowed-role=quiz-client:quiz-client-role"
+      -  "--code-challenge-method=S256 // PKCE"
+      -  "--email-domain=*"
+      -  "--cookie-secret=testtesttesttest"
 volumes:
   mysql:
 networks:
