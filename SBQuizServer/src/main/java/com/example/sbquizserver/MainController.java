@@ -26,7 +26,9 @@ public class MainController {
 
     @GetMapping("/quiz/all")
     @ResponseBody
-    public ResponseEntity<ArrayList<Quiz>> getAllQuizzes(){return ResponseEntity.status(OK).body(quizService.findAll());}
+    public ResponseEntity<ArrayList<Quiz>> getAllQuizzes(){
+        return ResponseEntity.status(OK).body(quizService.findAll());
+    }
 
     @GetMapping("/quiz/{quizId}")
     @ResponseBody
