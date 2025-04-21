@@ -30,7 +30,7 @@ public class mainControllerIntegrationTest {
     @LocalServerPort
     private Integer port;
 
-    static MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:latest")
+    static MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:8.4.0")
             .withDatabaseName("myquizappdb")
             .withInitScript("testContainer.sql");
 
