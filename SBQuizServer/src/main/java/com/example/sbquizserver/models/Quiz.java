@@ -1,10 +1,9 @@
 package com.example.sbquizserver.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Table( name = "quiz" )
@@ -14,18 +13,22 @@ public class Quiz {
     private Integer _id;
     private String Name;
     private String Description;
+    @Enumerated(EnumType.STRING)
+    private QuizCategories category;
 
     public Quiz() {}
 
-    public Quiz(Integer _id, String Name, String Description) {
+    public Quiz(Integer _id, String Name, String Description, QuizCategories category) {
         this._id = _id;
         this.Name = Name;
         this.Description = Description;
+        this.category = category;
     }
 
     public Integer get_id() {return _id;}
     public String getName() {return Name;}
     public String getDescription() {return Description;}
+    public QuizCategories getCategory() {return category;}
 
     @Override
     public boolean equals(Object obj) {
@@ -40,6 +43,8 @@ public class Quiz {
                 .append(_id,rhs.get_id())
                 .append(Name, rhs.getName())
                 .append(Description, rhs.getDescription())
+                .append(category, rhs.getCategory())
                 .isEquals();
     }
+
 }

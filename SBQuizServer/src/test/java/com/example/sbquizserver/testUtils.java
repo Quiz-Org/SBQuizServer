@@ -3,6 +3,7 @@ package com.example.sbquizserver;
 import com.example.sbquizserver.models.Answer;
 import com.example.sbquizserver.models.Question;
 import com.example.sbquizserver.models.Quiz;
+import com.example.sbquizserver.models.QuizCategories;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +12,8 @@ public class testUtils {
 
 
     public static final ArrayList<Quiz> QUIZZES = new ArrayList<>(List.of(
-            new Quiz(1, "History", "A short quiz on general history."),
-            new Quiz(2, "Bits and Bytes", "A short quiz about basic data quantities")
+            new Quiz(1, "History", "A short quiz on general history.", QuizCategories.HISTORY),
+            new Quiz(2, "Bits and Bytes", "A short quiz about basic data quantities",QuizCategories.TECHNOLOGY)
     ));
 
     public static final ArrayList<Question> QUESTIONS = new ArrayList<>(List.of(
