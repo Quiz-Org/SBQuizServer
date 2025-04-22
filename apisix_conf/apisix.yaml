@@ -1,0 +1,11 @@
+routes:
+  -
+    uri: /quiz*
+    upstream_id: 1
+upstreams:
+  -
+    id: 1
+    nodes:
+      "sb-server:8080": 1
+    type: roundrobin
+#END

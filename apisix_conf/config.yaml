@@ -1,0 +1,149 @@
+---
+deployment:
+  role: data_plane
+  role_data_plane:
+    config_provider: yaml
+  config_provider: etcd
+apisix:
+  enable_ipv6: true
+  extra_lua_path: ''
+  extra_lua_cpath: ''
+  show_upstream_status_in_response_header: false
+  proxy_mode: http
+  router:
+    ssl: radixtree_sni
+    http: radixtree_host_uri
+  enable_http2: true
+  resolver_timeout: 5
+  data_encryption:
+    enable_encrypt_fields: true
+    keyring:
+    - qeddd145sfvddff3
+    - edd1c9f0985e76a2
+  events:
+    module: lua-resty-events
+  enable_reuseport: true
+  normalize_uri_like_servlet: false
+  enable_server_tokens: true
+  delete_uri_tail_slash: false
+  ssl:
+    ssl_ciphers: ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384
+    ssl_protocols: TLSv1.2 TLSv1.3
+    ssl_trusted_certificate: /etc/ssl/certs/ca-certificates.crt
+    listen:
+    - enable_http3: false
+      port: 9443
+    enable: true
+    ssl_session_tickets: false
+  enable_admin: true
+  enable_control: true
+  disable_sync_configuration_during_start: false
+  enable_resolv_search_opt: true
+  node_listen:
+  - port: 9080
+  enable_dev_mode: false
+  proxy_cache:
+    zones:
+    - memory_size: 50m
+      disk_size: 1G
+      disk_path: /tmp/disk_cache_one
+      name: disk_cache_one
+      cache_levels: '1:2'
+    - name: memory_cache
+      memory_size: 50m
+    cache_ttl: 10s
+nginx_config:
+  error_log: logs/error.log
+  error_log_level: warn
+  worker_processes: auto
+  enable_cpu_affinity: false
+  worker_rlimit_nofile: 20480
+  worker_shutdown_timeout: 240s
+  max_pending_timers: 16384
+  http_configuration_snippet: ''
+  http_server_configuration_snippet: ''
+  http_server_location_configuration_snippet: ''
+  http_admin_configuration_snippet: ''
+  http_end_configuration_snippet: ''
+  stream_configuration_snippet: ''
+  stream:
+    access_log: logs/access_stream.log
+    access_log_format: $remote_addr [$time_local] $protocol $status $bytes_sent $bytes_received
+      $session_time
+    access_log_format_escape: default
+    lua_shared_dict:
+      plugin-limit-conn-stream: 10m
+      lrucache-lock-stream: 10m
+      etcd-cluster-health-check-stream: 10m
+      worker-events-stream: 10m
+      tars-stream: 1m
+    enable_access_log: false
+  http:
+    access_log_buffer: 16384
+    keepalive_timeout: 60s
+    client_header_timeout: 60s
+    client_body_timeout: 60s
+    client_max_body_size: 0
+    send_timeout: 10s
+    underscores_in_headers: 'on'
+    real_ip_header: X-Real-IP
+    upstream:
+      keepalive: 320
+      keepalive_timeout: 60s
+      keepalive_requests: 1000
+    real_ip_from:
+    - 127.0.0.1
+    - 'unix:'
+    lua_shared_dict:
+      plugin-limit-req-redis-cluster-slot-lock: 1m
+      plugin-limit-req: 10m
+      plugin-limit-count: 10m
+      plugin-limit-count-redis-cluster-slot-lock: 1m
+      prometheus-metrics: 10m
+      plugin-api-breaker: 10m
+      discovery: 1m
+      jwks: 1m
+      introspection: 10m
+      access-tokens: 1m
+      ext-plugin: 1m
+      ocsp-stapling: 10m
+      cas-auth: 10m
+      tars: 1m
+      tracing_buffer: 10m
+      internal-status: 10m
+      upstream-healthcheck: 10m
+      worker-events: 10m
+      lrucache-lock: 10m
+      balancer-ewma: 10m
+      balancer-ewma-locks: 10m
+      balancer-ewma-last-touched-at: 10m
+      etcd-cluster-health-check: 10m
+      plugin-ai-rate-limiting: 10m
+      plugin-ai-rate-limiting-reset-header: 10m
+      plugin-limit-conn: 10m
+      plugin-limit-conn-redis-cluster-slot-lock: 1m
+    proxy_ssl_server_name: true
+    enable_access_log: true
+    access_log: logs/access.log
+    access_log_format: $remote_addr - $remote_user [$time_local] $http_host "$request"
+      $status $body_bytes_sent $request_time "$http_referer" "$http_user_agent" $upstream_addr
+      $upstream_status $upstream_response_time "$upstream_scheme://$upstream_host$upstream_uri"
+    access_log_format_escape: default
+    variables_hash_max_size: 2048
+    charset: utf-8
+    real_ip_recursive: 'off'
+  event:
+    worker_connections: 10620
+  main_configuration_snippet: ''
+  meta:
+    lua_shared_dict:
+      prometheus-metrics: 15m
+  max_running_timers: 4096
+stream_plugins:
+- ip-restriction
+- limit-conn
+- mqtt-proxy
+- syslog
+graphql:
+  max_size: 1048576
+...
