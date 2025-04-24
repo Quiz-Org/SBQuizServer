@@ -19,7 +19,6 @@ import org.testcontainers.containers.MySQLContainer;
 
 import static com.example.sbquizserver.testUtils.QUIZZES;
 import static com.example.sbquizserver.testUtils.QUESTIONS;
-import static com.example.sbquizserver.testUtils.ANSWERS;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
@@ -80,7 +79,7 @@ public class mainControllerIntegrationTest {
                 .then()
                 .statusCode(200)
                 .body("question.questionText", hasItem(QUESTIONS.getFirst().getQuestionText()))
-                .body("answers.answerText.flatten()",hasItems(ANSWERS.getFirst().getAnswerText(),ANSWERS.get(4).getAnswerText()));
+                .body("question.answers.answerText.flatten()",hasItems(QUESTIONS.getFirst().getAnswers().getFirst().getAnswerText(),QUESTIONS.getFirst().getAnswers().get(4).getAnswerText()));
     }
 
     @Test

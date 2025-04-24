@@ -10,6 +10,7 @@ import java.util.List;
 @Repository
 public interface AnswerRepository extends CrudRepository <Answer,Integer> {
 
-    List<Answer> findByQuestionId(Integer quiz_id);
+    List<Answer> findByquestion__id(Integer quiz_id);
 
 }
+

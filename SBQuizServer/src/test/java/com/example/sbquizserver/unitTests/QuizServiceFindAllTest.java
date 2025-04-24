@@ -34,7 +34,7 @@ class QuizServiceFindAllTest {
     @Test
     void findAllTest(){
         ArrayList<Quiz> quizzesReturned = quizService.findAll();
-        Assertions.assertEquals(quizzesReturned,QUIZZES);
+        Assertions.assertEquals(QUIZZES, quizzesReturned);
     }
 
 }

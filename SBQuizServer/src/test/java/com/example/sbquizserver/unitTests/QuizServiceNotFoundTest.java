@@ -2,6 +2,7 @@ package com.example.sbquizserver.unitTests;
 
 import com.example.sbquizserver.QABundle;
 import com.example.sbquizserver.QuizService;
+import com.example.sbquizserver.models.Question;
 import com.example.sbquizserver.repos.AnswerRepository;
 import com.example.sbquizserver.repos.QuestionRepository;
 import org.junit.jupiter.api.Test;
@@ -30,8 +31,8 @@ public class QuizServiceNotFoundTest {
 
     @Test
     void noQuizFoundTest(){
-        ArrayList<QABundle> bundle = quizService.getQuizData(50);
-        assertThat(bundle).hasSize(0);
+        ArrayList<Question> questions = quizService.getQuizData(50);
+        assertThat(questions).hasSize(0);
     }
 
 }

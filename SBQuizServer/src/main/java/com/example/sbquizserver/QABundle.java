@@ -15,7 +15,7 @@ public class QABundle {
     public QABundle(Question question, AnswerRepository answerRepository){
 
         this.question = question;
-        this.answers = answerRepository.findByQuestionId(question.get_id());
+        this.answers = answerRepository.findByquestion__id(question.get_id());
 
     }
 

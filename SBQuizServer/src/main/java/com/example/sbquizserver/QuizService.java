@@ -25,13 +25,11 @@ public class QuizService {
         this.quizRepository = quizRepository;
     }
 
-    public ArrayList<QABundle> getQuizData(Integer quizId){
-        ArrayList<QABundle> quiz = new ArrayList<>();
+    public ArrayList<Question> getQuizData(Integer quizId){
         ArrayList<Question> questions = new ArrayList<>(questionRepository.findAllByQuizIdEquals(quizId));
 
-        if (questions.isEmpty()){return quiz;}
-        for(Question question : questions){quiz.add(new QABundle(question,answerRepository));}
-        return quiz;
+        if (questions.isEmpty()){return questions;}
+        return questions;
     }
 
     public ArrayList<Quiz> findAll(){

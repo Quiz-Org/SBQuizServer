@@ -1,10 +1,10 @@
 package com.example.sbquizserver.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
+
+import java.util.ArrayList;
 
 @Entity
 @Table(name = "answer")
@@ -12,21 +12,21 @@ public class Answer {
 
     @Id
     private Integer _id;
-    private Integer questionId;
     private String AnswerText;
     private boolean Correct;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "question_id")
+    private Question question;
 
     public Answer() {}
 
     public Answer(Integer _id, Integer questionId, String AnswerText, boolean Correct) {
         this._id = _id;
-        this.questionId = questionId;
         this.AnswerText = AnswerText;
         this.Correct = Correct;
     }
 
     public Integer get_id() {return _id;}
-    public Integer getQuestionId() {return questionId;}
     public String getAnswerText() {return AnswerText;}
     public boolean isCorrect() {return Correct;}
 
@@ -40,7 +40,6 @@ public class Answer {
         Answer rhs = (Answer) obj;
         return new EqualsBuilder()
                 .append(_id, rhs.get_id())
-                .append(questionId, rhs.getQuestionId())
                 .append(AnswerText, rhs.getAnswerText())
                 .append(Correct, this.isCorrect())
                 .isEquals();

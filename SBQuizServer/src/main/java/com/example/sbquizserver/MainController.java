@@ -1,5 +1,6 @@
 package com.example.sbquizserver;
 
+import com.example.sbquizserver.models.Question;
 import com.example.sbquizserver.models.Quiz;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +31,8 @@ public class MainController {
 
     @GetMapping("/quiz/{quizId}")
     @ResponseBody
-    public ResponseEntity<ArrayList<QABundle>> getQuizData(@PathVariable Integer quizId){
-        ArrayList<QABundle> quizData = quizService.getQuizData(quizId);
+    public ResponseEntity<ArrayList<Question>> getQuizData(@PathVariable Integer quizId){
+        ArrayList<Question> quizData = quizService.getQuizData(quizId);
         if (quizData.isEmpty()){return ResponseEntity.status(NOT_FOUND).body(quizData);}
         return ResponseEntity.status(OK).body(quizData);}
 }
