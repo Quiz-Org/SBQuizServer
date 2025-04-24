@@ -7,9 +7,11 @@ CREATE TABLE `quiz` (
                         `_id` int(11) NOT NULL AUTO_INCREMENT,
                         `name` text NOT NULL,
                         `description` text NOT NULL,
+                        `category` ENUM('HISTORY', 'TECHNOLOGY','GENERAL_KNOWLEDGE','POP_CULTURE'),
                         `num_quests` int(11) NOT NULL,
                         PRIMARY KEY (`_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 --
 -- Table structure for table `question`
