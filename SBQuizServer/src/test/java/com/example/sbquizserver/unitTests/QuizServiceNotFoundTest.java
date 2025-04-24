@@ -1,6 +1,5 @@
 package com.example.sbquizserver.unitTests;
 
-import com.example.sbquizserver.QABundle;
 import com.example.sbquizserver.QuizService;
 import com.example.sbquizserver.models.Question;
 import com.example.sbquizserver.repos.AnswerRepository;

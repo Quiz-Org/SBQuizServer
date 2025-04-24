@@ -1,9 +1,7 @@
 package com.example.sbquizserver.unitTests;
 
-import com.example.sbquizserver.QABundle;
 import com.example.sbquizserver.QuizService;
 import com.example.sbquizserver.models.Question;
-import com.example.sbquizserver.repos.AnswerRepository;
 import com.example.sbquizserver.repos.QuestionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,18 +22,12 @@ public class QuizServiceQuizDataTests {
     @Mock
     QuestionRepository questionRepository;
 
-    @Mock
-    AnswerRepository answerRepository;
-
     @InjectMocks
     QuizService quizService;
 
     @BeforeEach
     void setUp() {
         Mockito.when(questionRepository.findAllByQuizIdEquals(1)).thenReturn(QUESTIONS.subList(0,2));
-
-        //Mockito.when(answerRepository.findByquestion__id(1)).thenReturn(ANSWERS.subList(0,4));
-        //Mockito.when(answerRepository.findByquestion__id(2)).thenReturn(ANSWERS.subList(4,8));
     }
 
     @Test
