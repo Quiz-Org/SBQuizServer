@@ -4,7 +4,6 @@ services:
   db:
       container_name: db
       image: fegrus/quiz-db
-      platform: linux/amd64
       ports:
         - "3306:3306"
       environment:
@@ -16,7 +15,6 @@ services:
   sb-server:
     container_name: sb-server
     image: fegrus/quiz-sb-server
-    platform: linux/amd64
     depends_on:
       - db
     restart: on-failure
