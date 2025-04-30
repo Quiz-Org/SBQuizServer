@@ -1,11 +1,16 @@
 package com.example.sbquizserver.integrationTests;
 
+import com.example.sbquizserver.repos.AnswerRepository;
+import com.example.sbquizserver.repos.QuestionRepository;
+import com.example.sbquizserver.repos.QuizRepository;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -14,6 +19,7 @@ import org.testcontainers.containers.MySQLContainer;
 
 import static com.example.sbquizserver.testUtils.QUIZZES;
 import static com.example.sbquizserver.testUtils.QUESTIONS;
+import static com.example.sbquizserver.testUtils.ANSWERS;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
@@ -24,7 +30,6 @@ public class mainControllerIntegrationTest {
     @LocalServerPort
     private Integer port;
 
-    @SuppressWarnings("resource")
     static MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:8.4.0")
             .withDatabaseName("myquizappdb")
             .withInitScript("testContainer.sql");
@@ -42,6 +47,15 @@ public class mainControllerIntegrationTest {
         registry.add("spring.datasource.username", mySQLContainer::getUsername);
         registry.add("spring.datasource.password", mySQLContainer::getPassword);
     }
+
+    @Autowired
+    AnswerRepository answerRepository;
+
+    @Autowired
+    QuestionRepository questionRepository;
+
+    @Autowired
+    QuizRepository quizRepository;
 
     @BeforeEach
     void setUp() {RestAssured.baseURI = "http://localhost:" + port;}
@@ -65,8 +79,8 @@ public class mainControllerIntegrationTest {
                 .get("/quiz/{id}", 1)
                 .then()
                 .statusCode(200)
-                .body("questionText", hasItem(QUESTIONS.getFirst().getQuestionText()))
-                .body("answers.answerText.flatten()",hasItems(QUESTIONS.getFirst().getAnswers().getFirst().getAnswerText(),QUESTIONS.getFirst().getAnswers().get(3).getAnswerText()));
+                .body("question.questionText", hasItem(QUESTIONS.getFirst().getQuestionText()))
+                .body("answers.answerText.flatten()",hasItems(ANSWERS.getFirst().getAnswerText(),ANSWERS.get(4).getAnswerText()));
     }
 
     @Test
