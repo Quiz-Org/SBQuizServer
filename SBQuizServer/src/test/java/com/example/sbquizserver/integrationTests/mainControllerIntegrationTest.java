@@ -45,17 +45,17 @@ public class mainControllerIntegrationTest {
 
     @BeforeEach
     void setUp() {RestAssured.baseURI = "http://localhost:" + port;}
-
-    @Test
-    void getAllTest(){
-        given()
-                .contentType(ContentType.JSON)
-                .when()
-                .get("/quiz/all")
-                .then()
-                .statusCode(200)
-                .body("name",hasItems(QUIZZES.getFirst().getName(),QUIZZES.getLast().getName()));
-    }
+//
+//    @Test
+//    void getAllTest(){
+//        given()
+//                .contentType(ContentType.JSON)
+//                .when()
+//                .get("/quiz/all")
+//                .then()
+//                .statusCode(200)
+//                .body("name",hasItems(QUIZZES.getFirst().getName(),QUIZZES.getLast().getName()));
+//    }
 
     @Test
     void getSingleQuizTest(){

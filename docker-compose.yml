@@ -52,7 +52,7 @@ services:
       KC_DB_USERNAME: root
       KC_DB_PASSWORD: root
       KEYCLOAK_ADMIN: admin
-      KC_HOSTNAME: http://localhost:8080/
+      KC_HOSTNAME: http://keycloak:8080/
       KC_HOSTNAME_BACKCHANNEL_DYNAMIC: true
       KEYCLOAK_ADMIN_PASSWORD: admin
     depends_on:
@@ -87,6 +87,7 @@ services:
       - ./apisix_conf/config.yaml:/usr/local/apisix/conf/config.yaml
       - ./apisix_conf/apisix.yaml:/usr/local/apisix/conf/apisix.yaml
     ports:
+      - "443:443/tcp"
       - "9180:9180/tcp"
       - "9080:9080/tcp"
       - "9091:9091/tcp"

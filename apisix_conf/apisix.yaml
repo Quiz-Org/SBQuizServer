@@ -1,3 +1,103 @@
+ssls:
+  -
+    cert: |
+      -----BEGIN CERTIFICATE-----
+      MIICozCCAYsCCQC0ZHgkTOcKzjANBgkqhkiG9w0BAQsFADARMQ8wDQYDVQQDDAZS
+      T09UQ0EwIBcNMjUwNDMwMTUwNzUzWhgPMjEyNTA0MDYxNTA3NTNaMBQxEjAQBgNV
+      BAMMCWxvY2FsaG9zdDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAKEO
+      LZaw0Hgji/GOwlYNGXzlmiMEINMvFprgXP2B/RwPu+2yq/VZKijaJEatrnzwPR9P
+      LSWF6DzTpwURJOfSsqrKSk+WI3G9F3Pr+6xbpSHbhoO1bCZK7TVMxB6UjNtUwZBZ
+      zuC1i48DLcJRi2cf8RLu2ZUBX6OLq8TCQZb6A76uWoQ+3g9bGALVXR8eggCKzbwC
+      h5wNu+KxOfnm5B5oZKxroJARUIoYMSpyZVOhan+rIEvsQ+ukmclYs/EO0sUOyOAz
+      Xrvr3+rfnR/TvgKpfNm/LENuOLRlQamYGGXT6Urwef8J3E4dsF48QtxIfhupJMOc
+      6SD5Nj6qJvvoC9krGs8CAwEAATANBgkqhkiG9w0BAQsFAAOCAQEAOez3EdBUvx3c
+      vNKELf8gJgxp+rjg0jzNB1sPb6wYtwGFd5s1oSBrtnprcsoVb5+z6SHhJqbulnmF
+      pdGUl1cbxkJdQE216jD+y1IzLq5i/p7rAm47RlawP+NNv3PIVwo5Vwdpv0spbTso
+      9/VhQI/02ezgJTHS6q+DpwfwRcbe/UT/JaHPXmt/zxLueNr602C7QmrFIbZmw4oo
+      kq8WIvox5qqBtPidLwpuFIhU5JQMIdiDyxTx28QJGx2T3aXfcJg3V6LcT2qWyXH4
+      Mgd1f5xlh+n0ZyLxf7UVd16/kYL/tKS6josuFGYqYHS06XySyqg0GgD6Uc6BYEh9
+      WZKdKbQ75g==
+      -----END CERTIFICATE-----
+    key: |
+      -----BEGIN RSA PRIVATE KEY-----
+      MIIEpAIBAAKCAQEAoQ4tlrDQeCOL8Y7CVg0ZfOWaIwQg0y8WmuBc/YH9HA+77bKr
+      9VkqKNokRq2ufPA9H08tJYXoPNOnBREk59KyqspKT5Yjcb0Xc+v7rFulIduGg7Vs
+      JkrtNUzEHpSM21TBkFnO4LWLjwMtwlGLZx/xEu7ZlQFfo4urxMJBlvoDvq5ahD7e
+      D1sYAtVdHx6CAIrNvAKHnA274rE5+ebkHmhkrGugkBFQihgxKnJlU6Fqf6sgS+xD
+      66SZyViz8Q7SxQ7I4DNeu+vf6t+dH9O+Aql82b8sQ244tGVBqZgYZdPpSvB5/wnc
+      Th2wXjxC3Eh+G6kkw5zpIPk2Pqom++gL2SsazwIDAQABAoIBAH3eicyShWrPRSjV
+      TJZaCIhvHQauzESgMYd7P9G0jK8osNP1ZqUKOYPR8LX4OT1VuD9G7t67h6Q6Ofcg
+      zfoL1izaijcm/K6AfNrRHFE5Epaibb9zw4Et37NfOos3x9oGpHx/Y8qEt/xeHJ4Y
+      gt1mvk7wssXcW/WCTA0rUH2BCfo0Jbrs7QKyNRmN6Kj6hb71KSN60x0vxcP01EdL
+      9VYg86zdGszghKCtCIl7oYTbSsrxUgpcEhd/o020DLV+oIcGyBvbHhl8WRf46KIo
+      Xs6Pm5UWNnnal2oPtQSyQb7WSq+x1Zw6EpUQswMMMnB5qObibmZx2ZPbWcmxBgXj
+      2b8732ECgYEA1JwOi/xWtaFttcAwd/IbQt2mBemarNImO+JNgq3Y8mUFOcga5IlR
+      +zt11sYYoobCtW7ZKsNY+UKxwSRgeAcok4CD8rPswTnJPGRX7xqp7fXd/Ni3lkET
+      MqB/sxXpzGgw/1yChjBLNpSO6vXMJe5FTEzf4+XT/a9YabX8GLeWTT8CgYEAweyi
+      QjZJtu9v6N9AVcp3Zii1fZqA/7i/Xzcr1o5Iaer9isXYxn5UUR7xYs/JIQcv4EGx
+      E8/BLzYZqzagBQkLeVch3WBL6yJgF6yUQmOD7u5YxeVK5zjAbWiS0Cg0PNqbvutS
+      vzJiFQGnwgwuZX/oYUTH2KdvgVFQMPxR0uCyfnECgYEAhwX5AxQlqUI1H6lH3tUm
+      VQfZCYY7UihAWeW13hk0X3Sipficg6lmJEy14Ml8GbPF8l3Mk6juV5bwtr24emHp
+      dgu3QKrd4DUnxS/g3JwtcU+lRJAJv+XiIFPn5b8z9TnybCq/RiNjkO01+qhRl4FE
+      B1oHEoACaukyGCiYSsZFMRcCgYBijLf0wBP8BHgxturB7m95Gi0JVLBDxIZ0g9wi
+      YBJKyWHp2RuN2/tLclcnaQMEZtucsqWjtMuvC2ZGDS+K/4q2MmKCVwKdzs1YmpqJ
+      lnsgvD2e7CSBluSrdR5O7G+HkWzevEZD5f3UQRAY3AnkCPl2HPcWkhhndoQzMLcA
+      XLI48QKBgQCEVX8ejQ/E9ry6QIfDrZuF86jlRL7nGyEY98woSakew3AK+7cO50vc
+      XGij67ZrqrCoy0L3xyDZT+rjAGjGNU6ktAcDHCdzfcACFgds2JR8ZPOmIFfHH0tB
+      8X3bMQzLxEjzZETKVW4AthnNsiLQvboJ4sKplIhkCizf4Dp+WWvBnA==
+      -----END RSA PRIVATE KEY-----
+    snis:
+      - "localhost"
+
+  - cert: |
+      -----BEGIN CERTIFICATE-----
+      MIICojCCAYoCCQC0ZHgkTOcKzzANBgkqhkiG9w0BAQsFADARMQ8wDQYDVQQDDAZS
+      T09UQ0EwIBcNMjUwNDMwMTYxNDMyWhgPMjEyNTA0MDYxNjE0MzJaMBMxETAPBgNV
+      BAMMCDEwLjAuMi4yMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0OAL
+      Q6NWRXk00/bdnTdXwZ/j+66vLDWygM1iSYy24mEUqi8nTm8KBaU+rT6cWNl8v63i
+      rOHzXqAAhBy3He91hRKfc/pDab/Q/it9gITbTrDDG0VqygTps/AWw0vlMrNAFibt
+      UeaUTnGs6TTEjeqVg4HcZAOhGJqO23nXqZ0PupOXnDnDB2/QiM5gvHNa0Gb4GE1w
+      MsHo5qSNfS2RvUC+Zb9ta3MR8MGzp21mGuXoxdMfcRlqNFtXQB4lc+Nmwnflhqdq
+      vmgt+pbDaukS2+iSw0Fz86CL4pwElNtCArVgjV/STYq9tVS20yLY8UvIr2bDTBRZ
+      kpkeufSaaqnwAj9ypQIDAQABMA0GCSqGSIb3DQEBCwUAA4IBAQDDLs1gp2G/HSci
+      /F6Lr5v/n0br0TvAyhKMBOfcEqzHfkC8oGIBy2I74xoAtZTyIW7hjVf5p3rDy+Fm
+      91khil87gP+0U6IEYJ+RHwAlU70xc/97177/aj7v++FqsUKZOvUUTm9o3V+J+bfr
+      84In4TFcGkVZeC+wuYMLG82tHuNMSlutw3zl/hJh2eEqP4uZ06S0QLGxoypBhY16
+      wrJ7IZZlv9tnAh2s6+wybn3EAPyBXIFyY6eSwA7eY5xCJFbTsrCrd/+RBHP0RdAd
+      //NJWycFXqTgsuxz/kFaWvvEOvdh4QYmrObTlirJbDv6jnSED8JnjgGyzTxGk9EV
+      KdTJ0YU/
+      -----END CERTIFICATE-----
+    key: |
+      -----BEGIN RSA PRIVATE KEY-----
+      MIIEpAIBAAKCAQEAoQ4tlrDQeCOL8Y7CVg0ZfOWaIwQg0y8WmuBc/YH9HA+77bKr
+      9VkqKNokRq2ufPA9H08tJYXoPNOnBREk59KyqspKT5Yjcb0Xc+v7rFulIduGg7Vs
+      JkrtNUzEHpSM21TBkFnO4LWLjwMtwlGLZx/xEu7ZlQFfo4urxMJBlvoDvq5ahD7e
+      D1sYAtVdHx6CAIrNvAKHnA274rE5+ebkHmhkrGugkBFQihgxKnJlU6Fqf6sgS+xD
+      66SZyViz8Q7SxQ7I4DNeu+vf6t+dH9O+Aql82b8sQ244tGVBqZgYZdPpSvB5/wnc
+      Th2wXjxC3Eh+G6kkw5zpIPk2Pqom++gL2SsazwIDAQABAoIBAH3eicyShWrPRSjV
+      TJZaCIhvHQauzESgMYd7P9G0jK8osNP1ZqUKOYPR8LX4OT1VuD9G7t67h6Q6Ofcg
+      zfoL1izaijcm/K6AfNrRHFE5Epaibb9zw4Et37NfOos3x9oGpHx/Y8qEt/xeHJ4Y
+      gt1mvk7wssXcW/WCTA0rUH2BCfo0Jbrs7QKyNRmN6Kj6hb71KSN60x0vxcP01EdL
+      9VYg86zdGszghKCtCIl7oYTbSsrxUgpcEhd/o020DLV+oIcGyBvbHhl8WRf46KIo
+      Xs6Pm5UWNnnal2oPtQSyQb7WSq+x1Zw6EpUQswMMMnB5qObibmZx2ZPbWcmxBgXj
+      2b8732ECgYEA1JwOi/xWtaFttcAwd/IbQt2mBemarNImO+JNgq3Y8mUFOcga5IlR
+      +zt11sYYoobCtW7ZKsNY+UKxwSRgeAcok4CD8rPswTnJPGRX7xqp7fXd/Ni3lkET
+      MqB/sxXpzGgw/1yChjBLNpSO6vXMJe5FTEzf4+XT/a9YabX8GLeWTT8CgYEAweyi
+      QjZJtu9v6N9AVcp3Zii1fZqA/7i/Xzcr1o5Iaer9isXYxn5UUR7xYs/JIQcv4EGx
+      E8/BLzYZqzagBQkLeVch3WBL6yJgF6yUQmOD7u5YxeVK5zjAbWiS0Cg0PNqbvutS
+      vzJiFQGnwgwuZX/oYUTH2KdvgVFQMPxR0uCyfnECgYEAhwX5AxQlqUI1H6lH3tUm
+      VQfZCYY7UihAWeW13hk0X3Sipficg6lmJEy14Ml8GbPF8l3Mk6juV5bwtr24emHp
+      dgu3QKrd4DUnxS/g3JwtcU+lRJAJv+XiIFPn5b8z9TnybCq/RiNjkO01+qhRl4FE
+      B1oHEoACaukyGCiYSsZFMRcCgYBijLf0wBP8BHgxturB7m95Gi0JVLBDxIZ0g9wi
+      YBJKyWHp2RuN2/tLclcnaQMEZtucsqWjtMuvC2ZGDS+K/4q2MmKCVwKdzs1YmpqJ
+      lnsgvD2e7CSBluSrdR5O7G+HkWzevEZD5f3UQRAY3AnkCPl2HPcWkhhndoQzMLcA
+      XLI48QKBgQCEVX8ejQ/E9ry6QIfDrZuF86jlRL7nGyEY98woSakew3AK+7cO50vc
+      XGij67ZrqrCoy0L3xyDZT+rjAGjGNU6ktAcDHCdzfcACFgds2JR8ZPOmIFfHH0tB
+      8X3bMQzLxEjzZETKVW4AthnNsiLQvboJ4sKplIhkCizf4Dp+WWvBnA==
+      -----END RSA PRIVATE KEY-----
+    snis:
+      - "10.0.2.2"
+
 plugin_configs:
   -
     id: 1
@@ -7,12 +107,19 @@ plugin_configs:
         client_id: apisix
         discovery: http://keycloak:8080/realms/quiz-realm/.well-known/openid-configuration
         policy_enforcement_mode: PERMISSIVE
+      redirect:
+        http_to_https: true
+  -
+    id: 2
+    plugins:
+      redirect:
+        http_to_https: true
 
 routes:
   -
     uri: /quiz*
-    plugin_config_id: 1
     upstream_id: 1
+    plugin_config_id: 2
   - uri: /me*
     plugin_config_id: 1
     upstream_id: 2
