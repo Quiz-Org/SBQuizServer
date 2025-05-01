@@ -19,16 +19,55 @@ services:
       - db
     restart: on-failure
     ports:
-      - "80:8080"
+      - "8080:8080"
     environment:
       "DB_URL": "db:3306"
       "MYSQL_DB": "myquizappdb"
       "MYSQL_USER": "user"
       "MYSQL_PASSWORD": "password"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.quiz.entrypoints=websecure"
+      - "traefik.http.routers.quiz.rule=Host(`local.myquizapp.co.uk`)"
+      - "traefik.http.routers.quiz.tls.certresolver=myresolver"
+      - "traefik.http.routers.quiz-app.entrypoints=websecure"
+      - "traefik.http.routers.quiz-app.tls.certresolver=myresolver"
+      - "traefik.http.routers.quiz-app.rule=Host(`app.myquizapp.co.uk`)"
+
+  traefik-proxy:
+    # The official v3 Traefik docker image
+    image: traefik:v3.3
+    # Enables the web UI and tells Traefik to listen to docker
+    command:
+      - "--api.insecure=false"
+      - "--providers.docker"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entryPoints.web.address=:80"
+      - "--entryPoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.dnschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.dnschallenge.provider=cloudflare"
+#      - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.myresolver.acme.email=fergus@beckerleg.co.uk"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+    ports:
+      # The HTTP port
+      - "80:80"
+      - "443:443"
+    environment:
+      - "CF_DNS_API_TOKEN_FILE=/run/secrets/cf-token"
+    volumes:
+      - "./letsencrypt:/letsencrypt"
+      - /var/run/docker.sock:/var/run/docker.sock
+    secrets:
+      - "cf-token"
 
 volumes:
   mysql:
+  letsencrypt:
 networks:
   mynetwork:
     driver: bridge
+secrets:
+  cf-token:
+    file: ./secrets/cf-token.secret
 
