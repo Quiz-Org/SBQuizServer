@@ -2,7 +2,6 @@ package com.example.sbquizserver;
 
 import com.example.sbquizserver.models.Question;
 import com.example.sbquizserver.models.Quiz;
-import com.example.sbquizserver.repos.AnswerRepository;
 import com.example.sbquizserver.repos.QuestionRepository;
 import com.example.sbquizserver.repos.QuizRepository;
 
@@ -15,13 +14,11 @@ import java.util.ArrayList;
 public class QuizService {
 
     private final QuestionRepository questionRepository;
-    private final AnswerRepository answerRepository;
     private final QuizRepository quizRepository;
 
     @Autowired
-    public QuizService(QuizRepository quizRepository, QuestionRepository questionRepository, AnswerRepository answerRepository) {
+    public QuizService(QuizRepository quizRepository, QuestionRepository questionRepository) {
         this.questionRepository = questionRepository;
-        this.answerRepository = answerRepository;
         this.quizRepository = quizRepository;
     }
 

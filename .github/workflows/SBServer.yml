@@ -69,7 +69,7 @@ jobs:
         file: SBQuizServer/Dockerfile
         platforms: linux/amd64,linux/arm64
         push: true
-        tags: ${{env.APP_IMAGE}}:${{steps.tag.outputs.tag}}
+        tags: ${{env.APP_IMAGE}}:${{steps.tag.outputs.tag}}, ${{env.APP_IMAGE}}:latest
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
