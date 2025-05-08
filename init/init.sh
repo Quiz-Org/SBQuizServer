@@ -14,6 +14,7 @@ mysql -u root -p$MYSQL_ROOT_PASSWORD --execute \
   DROP USER IF EXISTS $MYSQL_USER;
   CREATE USER $MYSQL_USER IDENTIFIED BY '$MYSQL_PASSWORD';
   GRANT SELECT ON $MYSQL_DB.* TO $MYSQL_USER;
+  GRANT INSERT ON $MYSQL_DB.* TO $MYSQL_USER;
   FLUSH PRIVILEGES;
 "
 echo "** Checking quiz table"
@@ -27,3 +28,7 @@ bash /usr/local/table_check.sh question
 echo "** Checking answer table"
 
 bash /usr/local/table_check.sh answer
+
+echo "** Checking score table"
+
+bash /usr/local/table_check.sh score

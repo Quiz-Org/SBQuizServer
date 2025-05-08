@@ -5,13 +5,14 @@ services:
       container_name: db
       image: fegrus/quiz-db
       ports:
-        - "3306:3306"
+        - "3307:3306"
       environment:
         "MYSQL_DB": "myquizappdb"
         "MYSQL_USER": "user"
         "MYSQL_PASSWORD": "password"
       volumes:
         - ./mysql:/var/lib/mysql
+
   sb-server:
     container_name: sb-server
     image: fegrus/quiz-sb-server
@@ -19,20 +20,39 @@ services:
       - db
     restart: on-failure
     ports:
-      - "8080:8080"
+      - "8081:8080"
     environment:
-      "DB_URL": "db:3306"
+      "DB_URL": "db"
       "MYSQL_DB": "myquizappdb"
       "MYSQL_USER": "user"
       "MYSQL_PASSWORD": "password"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.quiz.entrypoints=websecure"
-      - "traefik.http.routers.quiz.rule=Host(`local.myquizapp.co.uk`)"
+      - "traefik.http.routers.quiz.rule=Host(`local.myquizapp.co.uk`) && PathPrefix(`/quiz`)"
       - "traefik.http.routers.quiz.tls.certresolver=myresolver"
       - "traefik.http.routers.quiz-app.entrypoints=websecure"
       - "traefik.http.routers.quiz-app.tls.certresolver=myresolver"
-      - "traefik.http.routers.quiz-app.rule=Host(`app.myquizapp.co.uk`)"
+      - "traefik.http.routers.quiz-app.rule=Host(`app.myquizapp.co.uk`) && PathPrefix(`/quiz`)"
+
+  score-service:
+    image: fegrus/scoreservice
+    restart: on-failure
+    ports:
+      - "8090:8085"
+    environment:
+      "DB_URL": "db"
+      "MYSQL_DB": "myquizappdb"
+      "MYSQL_USER": "user"
+      "MYSQL_PASSWORD": "password"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.score.entrypoints=websecure"
+      - "traefik.http.routers.score.rule=Host(`local.myquizapp.co.uk`) && PathPrefix(`/score`)"
+      - "traefik.http.routers.score.tls.certresolver=myresolver"
+      - "traefik.http.routers.score-app.entrypoints=websecure"
+      - "traefik.http.routers.score-app.tls.certresolver=myresolver"
+      - "traefik.http.routers.score-app.rule=Host(`app.myquizapp.co.uk`) && PathPrefix(`/score`)"
 
   traefik-proxy:
     # The official v3 Traefik docker image
